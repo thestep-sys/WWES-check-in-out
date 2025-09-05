@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windsor Woods ES Student Check-in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 32px;
+            height: 32px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        @media print {
+            /* Hide the parent view and modal, only showing the admin dashboard container */
+            body > #parentView, body > #pinModal {
+                display: none;
+            }
+            
+            /* Inside the admin dashboard, hide the UI elements like titles and buttons */
+            #adminView .flex, #adminView #printReportBtn {
+                display: none;
+            }
+
+            /* Reset padding and shadows for a clean print layout */
+            #adminView .p-8 {
+                padding: 0;
+            }
+            #adminView .bg-white, #adminView {
+                box-shadow: none;
+                border: none;
+            }
+            
+            /* Position the activity log table to fill the printed page */
+            #activityLog {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                font-size: 10pt; /* Adjust font size for readability */
+            }
+
+            /* Ensure the table header repeats on every page */
+             #activityLog thead {
+                display: table-header-group;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <!-- Parent View -->
+    <div id="parentView" class="container mx-auto p-4 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="flex justify-center items-center mb-4">
+                         <img src="https://drive.google.com/uc?export=download&id=11swncoVOmCqsCgpDcE10c3irVQNYrHb-" alt="Windsor Woods ES Logo" class="w-24 h-auto" onerror="this.onerror=null;this.src='https://placehold.co/150/007bff/ffffff?text=WWES';">
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-800">Windsor Woods ES</h1>
+                    <p id="portalTitle" class="text-gray-500">Student Check-in / Pick-up Portal</p>
+                </div>
+                
+                <!-- Initial Screen -->
+                <div id="initialScreen">
+                    <p class="text-center text-gray-600 mb-6">Please select an option:</p>
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col sm:flex-row sm:space-x-4">
+                            <button type="button" id="startCheckInBtn" class="w-full bg-blue-600 text-white font-semibold py-4 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out text-lg">Check In Late</button>
+                            <button type="button" id="startPickUpBtn" class="w-full bg-yellow-500 text-white font-semibold py-4 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition duration-150 ease-in-out text-lg mt-4 sm:mt-0">Pick Up Early</button>
+                        </div>
+                         <button type="button" id="startAdminBtn" class="w-full bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 transition duration-150 ease-in-out text-md">Admin Login</button>
+                    </div>
+                </div>
+
+                <!-- Main Content (Form) -->
+                <div id="mainContent" class="hidden">
+                    <button id="backButton" class="mb-4 text-sm text-blue-600 hover:underline">&larr; Back to selection</button>
+                    <form id="checkinForm" class="space-y-6">
+                        <div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+                                <div>
+                                    <label for="studentFirstName" class="block text-sm font-medium text-gray-700 mb-1">Student's First Name</label>
+                                    <input type="text" id="studentFirstName" name="studentFirstName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Jane" autocomplete="off">
+                                </div>
+                                <div class="relative">
+                                    <label for="studentLastName" class="block text-sm font-medium text-gray-700 mb-1">Student's Last Name</label>
+                                    <input type="text" id="studentLastName" name="studentLastName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Doe" autocomplete="off">
+                                    <div id="studentSuggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center flex-wrap gap-x-4 mt-3">
+                                <button type="button" id="verifyNameBtn" class="shrink-0 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">Verify Name</button>
+                                <p class="text-xs text-gray-500 italic">Do not use shortened or nicknames.</p>
+                            </div>
+                            <p id="studentNameStatus" class="text-xs text-gray-600 mt-2 h-4"></p>
+                        </div>
+
+                        <div>
+                            <label for="parentName" class="block text-sm font-medium text-gray-700 mb-1">Parent/Guardian's Full Name</label>
+                            <input type="text" id="parentName" name="parentName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., John Smith">
+                        </div>
+
+                        <div>
+                            <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                            <select id="reason" name="reason" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white">
+                                <!-- Options will be populated by JS -->
+                            </select>
+                        </div>
+                        
+                        <button type="submit" id="submitBtn" class="w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out">Submit</button>
+                    </form>
+                </div>
+
+                <!-- Message Area -->
+                <div id="message" class="mt-6 text-center"></div>
+
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin View -->
+    <div id="adminView" class="hidden container mx-auto p-4 max-w-6xl">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+             <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+                    <button id="logoutBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Logout</button>
+                </div>
+                 <div class="flex justify-between items-center mb-4">
+                     <h2 class="text-xl font-semibold text-gray-700">Recent Activity</h2>
+                     <div class="flex space-x-2">
+                        <button id="printReportBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Download PDF</button>
+                        <button id="resetReportBtn" class="bg-orange-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400">Reset Report</button>
+                     </div>
+                 </div>
+                 <div id="logLoader" class="flex justify-center items-center mt-6">
+                    <div class="loader"></div>
+                    <p class="ml-4 text-gray-600">Loading activity log...</p>
+                 </div>
+                 <div class="overflow-x-auto">
+                     <table id="activityLog" class="min-w-full divide-y divide-gray-200">
+                         <thead class="bg-gray-100">
+                             <tr>
+                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent</th>
+                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                             </tr>
+                         </thead>
+                         <tbody class="bg-white divide-y divide-gray-200">
+                             <!-- Log entries will be inserted here -->
+                         </tbody>
+                     </table>
+                     <p id="noActivity" class="text-center text-gray-500 mt-4 hidden">No activity recorded yet.</p>
+                 </div>
+             </div>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div id="pinModal" class="modal-overlay hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+            <h3 class="text-lg font-medium text-center mb-4">Enter PIN</h3>
+            <p id="pinError" class="text-red-500 text-sm text-center mb-2 h-4"></p>
+            <input type="password" id="pinInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center tracking-widest text-xl" maxlength="4" pattern="\d*">
+            <div class="flex justify-between mt-4 space-x-2">
+                <button id="cancelPin" class="w-1/2 bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400">Cancel</button>
+                <button id="submitPin" class="w-1/2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="resetModal" class="modal-overlay hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm text-center">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Are you sure?</h3>
+            <p class="text-gray-600 mb-6">This will permanently delete all activity log entries. This action cannot be undone.</p>
+            <div class="flex justify-between mt-4 space-x-2">
+                <button id="cancelReset" class="w-1/2 bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400">Cancel</button>
+                <button id="confirmReset" class="w-1/2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Yes, Reset It</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- DOM Elements ---
+        const parentView = document.getElementById('parentView');
+        const initialScreen = document.getElementById('initialScreen');
+        const mainContent = document.getElementById('mainContent');
+        const startCheckInBtn = document.getElementById('startCheckInBtn');
+        const startPickUpBtn = document.getElementById('startPickUpBtn');
+        const startAdminBtn = document.getElementById('startAdminBtn');
+        const backButton = document.getElementById('backButton');
+        const portalTitle = document.getElementById('portalTitle');
+        const form = document.getElementById('checkinForm');
+        const studentFirstNameInput = document.getElementById('studentFirstName');
+        const studentLastNameInput = document.getElementById('studentLastName');
+        const studentSuggestions = document.getElementById('studentSuggestions');
+        const studentNameStatus = document.getElementById('studentNameStatus');
+        const parentNameInput = document.getElementById('parentName');
+        const reasonSelect = document.getElementById('reason');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('message');
+        const verifyNameBtn = document.getElementById('verifyNameBtn');
+        
+        // Admin View Elements
+        const adminView = document.getElementById('adminView');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const printReportBtn = document.getElementById('printReportBtn');
+        const logLoader = document.getElementById('logLoader');
+        const activityLogTable = document.getElementById('activityLog');
+        const activityLogBody = activityLogTable.querySelector('tbody');
+        const noActivityPara = document.getElementById('noActivity');
+        const resetReportBtn = document.getElementById('resetReportBtn');
+        
+        // PIN Modal Elements
+        const pinModal = document.getElementById('pinModal');
+        const pinInput = document.getElementById('pinInput');
+        const pinError = document.getElementById('pinError');
+        const submitPin = document.getElementById('submitPin');
+        const cancelPin = document.getElementById('cancelPin');
+
+        // Reset Modal Elements
+        const resetModal = document.getElementById('resetModal');
+        const cancelReset = document.getElementById('cancelReset');
+        const confirmReset = document.getElementById('confirmReset');
+
+
+        // --- State ---
+        const students = [
+            { firstName: "Jerry", lastName: "Aguilar" }, { firstName: "Alekzander", lastName: "Aguirre" }, { firstName: "Carmen", lastName: "Allen" }, { firstName: "Keion", lastName: "Amos Jr" }, { firstName: "Nathaniel Luke", lastName: "Ancero" },
+            { firstName: "Zoie", lastName: "Anthony" }, { firstName: "Sophia", lastName: "Aoki" }, { firstName: "Gabriella", lastName: "Arestozo" }, { firstName: "Luca", lastName: "Atkins" }, { firstName: "Addison", lastName: "Austin" },
+            { firstName: "Layla", lastName: "Austin" }, { firstName: "Paige", lastName: "Bailey" }, { firstName: "Olivia", lastName: "Ballou" }, { firstName: "Cristian", lastName: "Bamaca-Perez" }, { firstName: "Alfred", lastName: "Barnes" },
+            { firstName: "Caden", lastName: "Barnes" }, { firstName: "Roman", lastName: "Barnett" }, { firstName: "Amelia", lastName: "Barrett" }, { firstName: "Grayson", lastName: "Barth" }, { firstName: "Raasia", lastName: "Bass" },
+            { firstName: "Christopher", lastName: "Bates" }, { firstName: "Aliyah", lastName: "Batty" }, { firstName: "Cali", lastName: "Batty" }, { firstName: "Cyrie", lastName: "Batty" }, { firstName: "Alaia", lastName: "Baughns" },
+            { firstName: "Kreed", lastName: "Baxter" }, { firstName: "Messiah", lastName: "Baxter" }, { firstName: "Iris", lastName: "Below" }, { firstName: "Brandon", lastName: "Bernal" }, { firstName: "Ashford", lastName: "Berryman" },
+            { firstName: "Azori", lastName: "Blair" }, { firstName: "Elliott", lastName: "Bleakley" }, { firstName: "Isabella", lastName: "Bollinger" }, { firstName: "Jason", lastName: "Bollinger" }, { firstName: "Kaiden", lastName: "Bowen" },
+            { firstName: "Rylin", lastName: "Branham" }, { firstName: "Analian", lastName: "Brito" }, { firstName: "Callie", lastName: "Brown" }, { firstName: "William", lastName: "Bruffy" }, { firstName: "Samuel", lastName: "Bullock" },
+            { firstName: "Beau", lastName: "Burris" }, { firstName: "Avery", lastName: "Byrd" }, { firstName: "Harper", lastName: "Byrd" }, { firstName: "Xiamara", lastName: "Calhoun" }, { firstName: "Sofia", lastName: "Cali" },
+            { firstName: "Colton", lastName: "Canale" }, { firstName: "Kason", lastName: "Canale" }, { firstName: "Harry", lastName: "Caras" }, { firstName: "Emberlyn", lastName: "Carlisle" }, { firstName: "Mary Addison", lastName: "Carnes" },
+            { firstName: "Gael", lastName: "Cartagena-Flores" }, { firstName: "Bentley", lastName: "Chamberlain" }, { firstName: "Willie", lastName: "Chapel" }, { firstName: "Harrison", lastName: "Claire" }, { firstName: "Emmalyn", lastName: "Clancy" },
+            { firstName: "Bryston", lastName: "Clark" }, { firstName: "Kysean", lastName: "Clarke" }, { firstName: "Camarri", lastName: "Clawson" }, { firstName: "Asher", lastName: "Coats" }, { firstName: "Isaiah", lastName: "Coats" },
+            { firstName: "William", lastName: "Colden" }, { firstName: "Maddison", lastName: "Coleman" }, { firstName: "Mckenzie", lastName: "Coleman" }, { firstName: "Morgan", lastName: "Coleman" }, { firstName: "Brooklyn", lastName: "Collins" },
+            { firstName: "Gabriella", lastName: "Collins" }, { firstName: "Noah", lastName: "Collins" }, { firstName: "Aniston", lastName: "Colombrito" }, { firstName: "Parker", lastName: "Colombrito" }, { firstName: "Tristan", lastName: "Colona" },
+            { firstName: "Maya", lastName: "Colson" }, { firstName: "Kiley", lastName: "Conkel" }, { firstName: "Jaxon", lastName: "Conner" }, { firstName: "Leon", lastName: "Connor" }, { firstName: "Aiden", lastName: "Cooke" },
+            { firstName: "Eisley", lastName: "Copeland" }, { firstName: "Kailani", lastName: "Coston" }, { firstName: "Kameron", lastName: "Craig" }, { firstName: "Greyson", lastName: "Crowder" }, { firstName: "Mason", lastName: "Cruz" },
+            { firstName: "Tessa", lastName: "Cruz" }, { firstName: "Honesti", lastName: "Cruz-Ayala" }, { firstName: "Anthony", lastName: "Cullaro" }, { firstName: "Kharli", lastName: "Culp" }, { firstName: "Kingston", lastName: "Culp" },
+            { firstName: "London", lastName: "Dailey" }, { firstName: "Anthony", lastName: "D'Arcourt" }, { firstName: "Kassidy", lastName: "D'Arcourt" }, { firstName: "Raymond", lastName: "D'Arcourt" }, { firstName: "Brooklyn", lastName: "Davis" },
+            { firstName: "David", lastName: "Davis" }, { firstName: "Jordan", lastName: "Davis" }, { firstName: "Chris", lastName: "Dawt-Bik-Lian" }, { firstName: "Lorenzo", lastName: "De-Vera-Bay" }, { firstName: "Quentin", lastName: "De-Vera-Bay" },
+            { firstName: "Selena", lastName: "De-Vera-Bay" }, { firstName: "Alice", lastName: "Deleon" }, { firstName: "Adrian", lastName: "Demer" }, { firstName: "Julian", lastName: "Dewitt" }, { firstName: "Noor", lastName: "Dhalai" },
+            { firstName: "Kai", lastName: "Dixon" }, { firstName: "Dillon", lastName: "Domanski" }, { firstName: "Brielle", lastName: "Donohue" }, { firstName: "Leona", lastName: "Douglas-Patterson" }, { firstName: "Abraham", lastName: "Draper" },
+            { firstName: "Colton", lastName: "Duke" }, { firstName: "Donovan", lastName: "Dunn" }, { firstName: "Joy", lastName: "Dunsworth" }, { firstName: "Miles", lastName: "Dunsworth" }, { firstName: "Ellie", lastName: "Ebersole" },
+            { firstName: "Zahara", lastName: "Edwards" }, { firstName: "Zoey", lastName: "Edwards" }, { firstName: "Caden", lastName: "Elliott" }, { firstName: "Alina", lastName: "Engstrand" }, { firstName: "Noah", lastName: "Engstrand" },
+            { firstName: "Forrest", lastName: "Engstrand-Irwin" }, { firstName: "Lennon", lastName: "Engstrand-Irwin" }, { firstName: "Lynnorah", lastName: "Engstrand-Irwin" }, { firstName: "Antonio", lastName: "Escalante" }, { firstName: "Emma", lastName: "Escalante" },
+            { firstName: "Arue Leialoha", lastName: "Etse" }, { firstName: "Divonlee Etsin", lastName: "Etse" }, { firstName: "Ja'Ria Aleinethy", lastName: "Etse" }, { firstName: "Michael", lastName: "Evans" }, { firstName: "Damari", lastName: "Evelyn" },
+            { firstName: "Jalani", lastName: "Evelyn" }, { firstName: "Christian", lastName: "Evidente" }, { firstName: "Elijah", lastName: "Faison Jr." }, { firstName: "Harper", lastName: "Fawley" }, { firstName: "Nora", lastName: "Fawley" },
+            { firstName: "Kassidy", lastName: "Featherston" }, { firstName: "Santiago", lastName: "Felix" }, { firstName: "Zorial", lastName: "Felton" }, { firstName: "Carter", lastName: "Fields" }, { firstName: "Lilah", lastName: "Fields" },
+            { firstName: "Leah", lastName: "Findikoglu" }, { firstName: "Tru", lastName: "Fisher" }, { firstName: "Annabelle", lastName: "Fleshman" }, { firstName: "Ares", lastName: "Flowers" }, { firstName: "Noel", lastName: "Flowers" },
+            { firstName: "Alexander", lastName: "Fockler" }, { firstName: "Brayden", lastName: "Foley" }, { firstName: "Paisley", lastName: "Foley" }, { firstName: "Landon", lastName: "Fort" }, { firstName: "Angel", lastName: "Freeman" },
+            { firstName: "Emily", lastName: "Freeman" }, { firstName: "Taylor", lastName: "Freeman-Gatlin" }, { firstName: "Heidi", lastName: "Freihofer" }, { firstName: "Reagan", lastName: "Freihofer" }, { firstName: "Yara", lastName: "Gaviria" },
+            { firstName: "Emma", lastName: "Gayarski" }, { firstName: "Neveah", lastName: "Getson" }, { firstName: "Colton", lastName: "Glende" }, { firstName: "Greyson", lastName: "Godfrey" }, { firstName: "Devlin", lastName: "Gomez" },
+            { firstName: "Luella", lastName: "Gomez" }, { firstName: "Julia", lastName: "Goncalves-Silva" }, { firstName: "Melanie", lastName: "Gonzales" }, { firstName: "Jordan", lastName: "Gonzalez" }, { firstName: "Nelly", lastName: "Gonzalez" },
+            { firstName: "Iris", lastName: "Grace" }, { firstName: "Nora", lastName: "Gray" }, { firstName: "James", lastName: "Greene" }, { firstName: "Darius", lastName: "Groome" }, { firstName: "Kallie", lastName: "Groves" },
+            { firstName: "Macie", lastName: "Groves" }, { firstName: "Lucas", lastName: "Guidry" }, { firstName: "Catalina", lastName: "Guiles" }, { firstName: "Jaxson", lastName: "Guswiler" }, { firstName: "Julianna", lastName: "Guswiler" },
+            { firstName: "A'Hriyon", lastName: "Hall" }, { firstName: "Asher", lastName: "Hall" }, { firstName: "Olivia", lastName: "Hall" }, { firstName: "Amarion", lastName: "Hamberry-Murphy" }, { firstName: "Jordan", lastName: "Hamilton" },
+            { firstName: "Travis", lastName: "Hamlin" }, { firstName: "Hatch", lastName: "Harding" }, { firstName: "Elijah", lastName: "Harris" }, { firstName: "Dakota", lastName: "Harver" }, { firstName: "Lillian", lastName: "Hastings" },
+            { firstName: "Henry", lastName: "Hayes" }, { firstName: "Olivia", lastName: "Heil" }, { firstName: "Trenity", lastName: "Henderson" }, { firstName: "Amelia", lastName: "Hermann" }, { firstName: "Lincoln", lastName: "Hermann" },
+            { firstName: "David", lastName: "Hesse" }, { firstName: "Isabelle", lastName: "Hesse" }, { firstName: "Derek", lastName: "Hill" }, { firstName: "Jaxon", lastName: "Hill" }, { firstName: "Lillian", lastName: "Hinders" },
+            { firstName: "Emanuel", lastName: "Hinton" }, { firstName: "Natalie", lastName: "Hirko" }, { firstName: "Masen", lastName: "Holmes" }, { firstName: "Brielle", lastName: "Hovemeyer" }, { firstName: "Brooklynn", lastName: "Hovemeyer" },
+            { firstName: "Kase", lastName: "Howerton" }, { firstName: "Miles", lastName: "Hubbard" }, { firstName: "Zoebelle", lastName: "Ilao" }, { firstName: "Elliot", lastName: "Jacobus" }, { firstName: "Jaythan", lastName: "Jimenez-Gonzalez" },
+            { firstName: "Joelle", lastName: "Johnson" }, { firstName: "Alycia", lastName: "Jones" }, { firstName: "Ava", lastName: "Jones" }, { firstName: "Jameson", lastName: "Jones" }, { firstName: "Lucas", lastName: "Jones" },
+            { firstName: "Massian", lastName: "Jones" }, { firstName: "Novah", lastName: "Jones" }, { firstName: "Mariam", lastName: "Kaba" }, { firstName: "Maxton", lastName: "Kammerer" }, { firstName: "Amir", lastName: "Kassabi" },
+            { firstName: "Isra", lastName: "Kassabi" }, { firstName: "Scotlyn", lastName: "Kelly" }, { firstName: "Slater", lastName: "Kelly" }, { firstName: "Adriel", lastName: "Kera" }, { firstName: "Victoria", lastName: "Kerzner" },
+            { firstName: "Ferah", lastName: "Keser" }, { firstName: "Allen", lastName: "Key" }, { firstName: "Duval", lastName: "Keys" }, { firstName: "Isiah", lastName: "King" }, { firstName: "Delaney", lastName: "Kleeh" },
+            { firstName: "Carly", lastName: "Klepacz" }, { firstName: "Jenavieve", lastName: "Klepacz" }, { firstName: "Bodhi", lastName: "Knowles" }, { firstName: "Braden", lastName: "Kringle" }, { firstName: "Dillon", lastName: "Kringle" },
+            { firstName: "Omar", lastName: "Kulla" }, { firstName: "Yasmeen", lastName: "Kulla" }, { firstName: "Amelia", lastName: "Kwok" }, { firstName: "Anniyah", lastName: "Lambrecht" }, { firstName: "Sioeli", lastName: "Langi" },
+            { firstName: "Link", lastName: "Langland" }, { firstName: "Theodore", lastName: "Lanier" }, { firstName: "Xzavier", lastName: "Laraway" }, { firstName: "Maryjane", lastName: "Larkin" }, { firstName: "Jacob", lastName: "Laster" },
+            { firstName: "Hannah", lastName: "Lawrence" }, { firstName: "Laylanni", lastName: "Lee" }, { firstName: "Leidon", lastName: "Lee" }, { firstName: "Lula", lastName: "Leger" }, { firstName: "London", lastName: "Lemon-Freeman" },
+            { firstName: "Callie", lastName: "Leonard" }, { firstName: "Beckett", lastName: "Lessard" }, { firstName: "Jaxon", lastName: "Lett" }, { firstName: "Leanni", lastName: "Lewis" }, { firstName: "Florence", lastName: "Lian" },
+            { firstName: "Anita", lastName: "Limon-Knighton" }, { firstName: "Chantal", lastName: "Litton-Bullock" }, { firstName: "Vayda", lastName: "Locy" }, { firstName: "Connor", lastName: "Logan" }, { firstName: "Gerardo", lastName: "Loredo-Villanueva" },
+            { firstName: "Jacquille", lastName: "Lot" }, { firstName: "Ian", lastName: "Lowe" }, { firstName: "James", lastName: "Ludwig" }, { firstName: "Maddox", lastName: "Lyons" }, { firstName: "Nelson", lastName: "Lyons" },
+            { firstName: "Odin", lastName: "Lyons" }, { firstName: "Catalina", lastName: "Maldonado" }, { firstName: "Jorge", lastName: "Maldonado" }, { firstName: "Naomi", lastName: "Mallory" }, { firstName: "Britton", lastName: "Malone" },
+            { firstName: "Makenna", lastName: "Malone" }, { firstName: "Wyatt", lastName: "Mann" }, { firstName: "Hazel", lastName: "Manzano" }, { firstName: "Ibraheem", lastName: "Manzoor" }, { firstName: "Emerson", lastName: "Marquette" },
+            { firstName: "Joseph", lastName: "Marquette" }, { firstName: "Ryu", lastName: "Martinez" }, { firstName: "Sofia", lastName: "Martinez" }, { firstName: "Liam", lastName: "Matthews" }, { firstName: "Master", lastName: "Mayzick" },
+            { firstName: "Zian", lastName: "Mcclinton" }, { firstName: "Armani", lastName: "Mccray" }, { firstName: "Eryn", lastName: "Mccullough" }, { firstName: "Nathan", lastName: "Mcdavitt" }, { firstName: "Isla", lastName: "Mcdowell" },
+            { firstName: "John", lastName: "Mcdowell" }, { firstName: "Cadence", lastName: "Mcneely" }, { firstName: "Eden", lastName: "Mcneely" }, { firstName: "Daniel", lastName: "Mcneill" }, { firstName: "Elena", lastName: "Mcneill" },
+            { firstName: "Ashley", lastName: "Mejia-Osorio" }, { firstName: "Blair", lastName: "Mennona" }, { firstName: "Siwa", lastName: "Messan" }, { firstName: "Ava", lastName: "Metz" }, { firstName: "Noah", lastName: "Metz" },
+            { firstName: "Henson", lastName: "Miller" }, { firstName: "Jackson", lastName: "Minozzi" }, { firstName: "Khalil", lastName: "Mitchell" }, { firstName: "Lane", lastName: "Mitchell" }, { firstName: "Te'Ryah", lastName: "Mitchell" },
+            { firstName: "Bailey", lastName: "Monahan" }, { firstName: "Cassidy", lastName: "Monahan" }, { firstName: "Lacey", lastName: "Monahan" }, { firstName: "Addison", lastName: "Montoya" }, { firstName: "Cheryl", lastName: "Montoya" },
+            { firstName: "Séamus", lastName: "Morneault" }, { firstName: "Hunter", lastName: "Morrison" }, { firstName: "Jaxon", lastName: "Moses" }, { firstName: "Olivia", lastName: "Moses" }, { firstName: "Jaxon", lastName: "Mosley" },
+            { firstName: "Nikolai", lastName: "Moss" }, { firstName: "Adriana", lastName: "Moz-Ortega" }, { firstName: "Joanna", lastName: "Munro" }, { firstName: "Connor", lastName: "Murphy" }, { firstName: "Scarlet", lastName: "Murphy" },
+            { firstName: "Tommie", lastName: "Murphy" }, { firstName: "Rayhan", lastName: "Ndam" }, { firstName: "Oliver", lastName: "Newvall" }, { firstName: "Elaine", lastName: "Nguyen" }, { firstName: "Eric", lastName: "Nguyen" },
+            { firstName: "Jalen", lastName: "Nickles" }, { firstName: "Teeda", lastName: "Nonthaveth" }, { firstName: "Bailey", lastName: "Nunes" }, { firstName: "Nich", lastName: "Obuga" }, { firstName: "Slade", lastName: "O'Connor" },
+            { firstName: "Kathleen", lastName: "Oettel" }, { firstName: "Lucy", lastName: "Parker" }, { firstName: "Olivia", lastName: "Parker" }, { firstName: "Gareth", lastName: "Passey" }, { firstName: "August", lastName: "Pavlovich" },
+            { firstName: "Skylar", lastName: "Pendergrass" }, { firstName: "Christopher", lastName: "Penn" }, { firstName: "Emnet", lastName: "Penn" }, { firstName: "Pierson", lastName: "Pentz-Waisome" }, { firstName: "Bayleigh", lastName: "Perdue" },
+            { firstName: "Adam Damien", lastName: "Peredo" }, { firstName: "Ana", lastName: "Perez" }, { firstName: "Hevanny", lastName: "Perez" }, { firstName: "Juan", lastName: "Perez" }, { firstName: "John", lastName: "Perrigin" },
+            { firstName: "Levi", lastName: "Perrigin" }, { firstName: "Joseph", lastName: "Perry" }, { firstName: "Max", lastName: "Peters" }, { firstName: "Kameron", lastName: "Pettyford" }, { firstName: "Kate", lastName: "Phan" },
+            { firstName: "Louis", lastName: "Phan" }, { firstName: "Kenneth", lastName: "Phelps" }, { firstName: "Ava", lastName: "Phillips" }, { firstName: "Bryson", lastName: "Piga-Hamlin" }, { firstName: "Malaya", lastName: "Pinero" },
+            { firstName: "Zaida", lastName: "Pinero" }, { firstName: "Kayla", lastName: "Pinkney" }, { firstName: "Zaria", lastName: "Pope" }, { firstName: "Brian", lastName: "Potter" }, { firstName: "Amber", lastName: "Powell" },
+            { firstName: "Jade", lastName: "Powell" }, { firstName: "Lucas", lastName: "Previtire" }, { firstName: "David", lastName: "Pulley" }, { firstName: "Mateo", lastName: "Quillas-Gonzalez" }, { firstName: "Gracelynn", lastName: "Ramirez" },
+            { firstName: "Giovani", lastName: "Rausch" }, { firstName: "Chloe", lastName: "Ravizza" }, { firstName: "Lucas", lastName: "Ravizza" }, { firstName: "Logan", lastName: "Reid" }, { firstName: "Ada", lastName: "Reilly" },
+            { firstName: "Sovi", lastName: "Reilly" }, { firstName: "Mason", lastName: "Renn" }, { firstName: "Christopher", lastName: "Richardson" }, { firstName: "Dymond", lastName: "Ritter" }, { firstName: "Hendrick", lastName: "Rivas" },
+            { firstName: "Ezra", lastName: "Rivera" }, { firstName: "Gracelynn", lastName: "Roberts" }, { firstName: "Braiden", lastName: "Robinson" }, { firstName: "Reid", lastName: "Robinson" }, { firstName: "Tejai", lastName: "Robinson" },
+            { firstName: "Jace", lastName: "Roden" }, { firstName: "Fabian", lastName: "Rodriguez-Aguilar" }, { firstName: "Logan", lastName: "Roller" }, { firstName: "Yariel", lastName: "Rondon-Chavez" }, { firstName: "Jaylahnie", lastName: "Rosario-Virella" },
+            { firstName: "Brady", lastName: "Roundtree" }, { firstName: "Andrew", lastName: "Roy" }, { firstName: "Louis", lastName: "Russell" }, { firstName: "Gracelyn", lastName: "Sacksteder" }, { firstName: "Gunner", lastName: "Sankey" },
+            { firstName: "Lilah", lastName: "Santana" }, { firstName: "Lily", lastName: "Sartin" }, { firstName: "Zane", lastName: "Sartin" }, { firstName: "Lucas", lastName: "Schmeding" }, { firstName: "Micah", lastName: "Schmeding" },
+            { firstName: "Helena", lastName: "Schulze" }, { firstName: "Margaret", lastName: "Schulze" }, { firstName: "Caden", lastName: "Scott-Martinez" }, { firstName: "Catherine", lastName: "Seguin" }, { firstName: "Margaret", lastName: "Seguin" },
+            { firstName: "Dorian", lastName: "Sejko" }, { firstName: "Evelyn", lastName: "Shi" }, { firstName: "Elaine", lastName: "Shoulders" }, { firstName: "Aliana", lastName: "Sibal" }, { firstName: "Skylar", lastName: "Silcox" },
+            { firstName: "Damon", lastName: "Sillars" }, { firstName: "Aubrey", lastName: "Silva" }, { firstName: "Landon", lastName: "Silva" }, { firstName: "Sofia", lastName: "Silva" }, { firstName: "Landon", lastName: "Simon" },
+            { firstName: "Waylon", lastName: "Simon" }, { firstName: "Denzell", lastName: "Sims" }, { firstName: "Evan", lastName: "Sloan" }, { firstName: "Avery", lastName: "Smith" }, { firstName: "Cohen", lastName: "Smith" },
+            { firstName: "Josiah", lastName: "Smith" }, { firstName: "Josiah", lastName: "Smith" }, { firstName: "Paxton", lastName: "Smith" }, { firstName: "Skylar", lastName: "Smith" }, { firstName: "Tyson", lastName: "Smith" },
+            { firstName: "Rogan", lastName: "Smithwick" }, { firstName: "Maverick", lastName: "Smittle" }, { firstName: "Ryan", lastName: "Sola" }, { firstName: "Richard", lastName: "Solomon" }, { firstName: "Ava-Lee", lastName: "Sparrow" },
+            { firstName: "Julius", lastName: "Sparrow" }, { firstName: "Chandler", lastName: "St.Clair" }, { firstName: "Luke", lastName: "St.Clair" }, { firstName: "Mason", lastName: "St.Clair" }, { firstName: "Trevor", lastName: "Starnes" },
+            { firstName: "William", lastName: "Starnes" }, { firstName: "Ryleigh", lastName: "Steen" }, { firstName: "Brody", lastName: "Stevens" }, { firstName: "Jaxon Xavier", lastName: "Stewart" }, { firstName: "Eden", lastName: "Story" },
+            { firstName: "Thomas", lastName: "Sutton" }, { firstName: "Logan", lastName: "Swann" }, { firstName: "Mason", lastName: "Swann" }, { firstName: "Jackson", lastName: "Sweeney" }, { firstName: "Clifford", lastName: "Sweet" },
+            { firstName: "Sophia", lastName: "Swenson" }, { firstName: "Lael", lastName: "Swinton" }, { firstName: "Kaladin", lastName: "Taylor" }, { firstName: "Surraya", lastName: "Tennant" }, { firstName: "Makenna", lastName: "Thomas" },
+            { firstName: "Della", lastName: "Thompson" }, { firstName: "Javien", lastName: "Thompson" }, { firstName: "Oliver", lastName: "Thompson" }, { firstName: "Parker", lastName: "Thompson" }, { firstName: "Theodore", lastName: "Thompson" },
+            { firstName: "Annmarie", lastName: "Thornhill" }, { firstName: "David", lastName: "Tilley" }, { firstName: "Kinsley", lastName: "Tilley" }, { firstName: "Jacob", lastName: "Tjon-Eng-Soe" }, { firstName: "Myles", lastName: "Topping" },
+            { firstName: "Makai", lastName: "Toran" }, { firstName: "Giorgio", lastName: "Torcasio" }, { firstName: "Dean", lastName: "Tran" }, { firstName: "Jennie", lastName: "Tran" }, { firstName: "Naomi", lastName: "Trussler" },
+            { firstName: "Lucas", lastName: "Turbi" }, { firstName: "Victoria", lastName: "Turbi-Amparo" }, { firstName: "Jaxon", lastName: "Turner" }, { firstName: "Raegan", lastName: "Turner" }, { firstName: "Joycelynn", lastName: "Tuschl" },
+            { firstName: "Michael", lastName: "Tuschl" }, { firstName: "Kylo", lastName: "Tyler" }, { firstName: "Cash", lastName: "Underdue" }, { firstName: "Danilo", lastName: "Vargas" }, { firstName: "Luca", lastName: "Vargas" },
+            { firstName: "Leonardo", lastName: "Vega" }, { firstName: "Calekxis", lastName: "Velez-Campos" }, { firstName: "Ava", lastName: "Villafana" }, { firstName: "Liam", lastName: "Villafana" }, { firstName: "Lucas", lastName: "Villaire" },
+            { firstName: "Lucis", lastName: "Vincent" }, { firstName: "Nason", lastName: "Vinson" }, { firstName: "Murphy", lastName: "Waldin" }, { firstName: "Ivory", lastName: "Walen" }, { firstName: "Leander", lastName: "Walen" },
+            { firstName: "Aspen", lastName: "Walker" }, { firstName: "India", lastName: "Walton" }, { firstName: "Karly", lastName: "Waters-Sierra" }, { firstName: "Ty'Rihana", lastName: "Watkins" }, { firstName: "Tyree", lastName: "Watkins" },
+            { firstName: "Kobe", lastName: "Watson" }, { firstName: "Fiadh", lastName: "Weisel" }, { firstName: "Tyler", lastName: "Wellman" }, { firstName: "Jordan", lastName: "West" }, { firstName: "Sylas", lastName: "Wheeler" },
+            { firstName: "Anaiyah", lastName: "White" }, { firstName: "Eli", lastName: "White" }, { firstName: "Isaiah", lastName: "White-Turner" }, { firstName: "Cortlynn", lastName: "Whitsel-Fardoulis" }, { firstName: "Christian", lastName: "Whitworth" },
+            { firstName: "Luciano", lastName: "Wilkin" }, { firstName: "Judah", lastName: "Williams" }, { firstName: "Kalen", lastName: "Williams" }, { firstName: "Ryan", lastName: "Williams" }, { firstName: "Jayden", lastName: "Willis" },
+            { firstName: "Kael", lastName: "Wilson" }, { firstName: "Liam", lastName: "Wilson" }, { firstName: "Matthew", lastName: "Wilson" }, { firstName: "Alexander", lastName: "Winchell" }, { firstName: "Dean", lastName: "Windham" },
+            { firstName: "Rylee", lastName: "Wommack" }, { firstName: "Emery", lastName: "Wong" }, { firstName: "Jody", lastName: "Wright" }, { firstName: "Sylvia", lastName: "Wright" }, { firstName: "Sadie", lastName: "Wygant" },
+            { firstName: "Adonis", lastName: "Young" }, { firstName: "Lorelei", lastName: "Young" }, { firstName: "Aniko", lastName: "Young-Tillery" }, { firstName: "Brayden", lastName: "Zackoski" }, { firstName: "Grayson", lastName: "Zeiders" },
+            { firstName: "Gianna", lastName: "Ziara" }, { firstName: "Erik", lastName: "Zimny" }, { firstName: "Natalia", lastName: "Zimny" }, { firstName: "Bryson", lastName: "Zinno" }, { firstName: "Annelise", lastName: "Zoldos" }
+        ];
+        let currentActionType = ''; // 'Check In Late' or 'Pick Up Early'
+        let isStudentSelected = false;
+
+        // --- Firebase Setup ---
+        let db;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-checkin-app-v9-admin';
+        
+        async function initializeFirebase() {
+            try {
+                // Use the environment-provided config object
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                
+                // Check if the config is empty/invalid
+                if (!firebaseConfig.apiKey) {
+                    console.error("Firebase config is missing or invalid.");
+                    logLoader.innerHTML = '<p class="text-red-500">Error: Firebase is not configured correctly.</p>';
+                    return;
+                }
+
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                const auth = getAuth(app);
+                
+                // Use the environment-provided auth token if available
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                listenForActivity();
+
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                logLoader.innerHTML = `<p class="text-red-500">Could not connect to the database. ${error.message}</p>`;
+            }
+        }
+        
+        // --- UI Navigation ---
+        function showForm(actionType) {
+            currentActionType = actionType;
+            initialScreen.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            portalTitle.textContent = actionType;
+            isStudentSelected = false;
+            
+            // Configure form based on action
+            reasonSelect.innerHTML = '';
+            const reasons = {
+                'Check In Late': ['Doctor/Dentist appointment', 'Personal', 'Overslept', 'Traffic', 'Running late', 'Bus No-show', 'Appointment'],
+                'Pick Up Early': ['Early Dismissal - Appointment', 'Early Dismissal - Personal']
+            };
+            
+            let optionsHtml = `<option value="" disabled selected>Select a reason...</option>`;
+            reasons[actionType].forEach(reason => {
+                optionsHtml += `<option value="${reason}">${reason}</option>`;
+            });
+            reasonSelect.innerHTML = optionsHtml;
+
+            submitBtn.textContent = `Submit`;
+            if (actionType === 'Check In Late') {
+                submitBtn.className = 'w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out bg-blue-600 hover:bg-blue-700 focus:ring-blue-500';
+            } else {
+                 submitBtn.className = 'w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400';
+            }
+        }
+
+        function showInitialScreen() {
+            mainContent.classList.add('hidden');
+            initialScreen.classList.remove('hidden');
+            portalTitle.textContent = 'Student Check-in / Pick-up Portal';
+            form.reset();
+            studentNameStatus.textContent = ''; // Reset status on return
+            studentSuggestions.classList.add('hidden');
+        }
+
+        // --- Student Name Search & Validation ---
+        function findStudentMatches() {
+            const inputFirstName = studentFirstNameInput.value.trim().toLowerCase();
+            const inputLastName = studentLastNameInput.value.trim().toLowerCase();
+            isStudentSelected = false;
+            studentNameStatus.textContent = ''; 
+            studentSuggestions.classList.add('hidden'); // Hide old suggestions
+
+            if (inputFirstName.length < 1 && inputLastName.length < 1) {
+                return; // Don't search if both fields are empty
+            }
+
+            const matches = students.filter(student => {
+                const fNameMatch = student.firstName.toLowerCase().includes(inputFirstName);
+                const lNameMatch = student.lastName.toLowerCase().includes(inputLastName);
+                return fNameMatch && lNameMatch;
+            }).slice(0, 5);
+            
+            // --- Smart Verification Logic ---
+            if (matches.length === 1 && matches[0].firstName.toLowerCase() === inputFirstName && matches[0].lastName.toLowerCase() === inputLastName) {
+                // If there's ONE exact match, auto-select it.
+                const student = matches[0];
+                studentFirstNameInput.value = student.firstName;
+                studentLastNameInput.value = student.lastName;
+                isStudentSelected = true;
+                studentNameStatus.textContent = '✓ Name verified';
+                studentNameStatus.className = 'text-xs text-green-600 mt-2 h-4';
+                studentSuggestions.classList.add('hidden');
+            } else if (matches.length > 0) {
+                // If there are multiple partial matches, show the list.
+                studentNameStatus.textContent = 'Please select a student from the list below.';
+                studentNameStatus.className = 'text-xs text-blue-600 mt-2 h-4';
+                displaySuggestions(matches);
+            } else {
+                // If there are no matches.
+                studentNameStatus.textContent = 'No matches found. Please check spelling.';
+                studentNameStatus.className = 'text-xs text-red-600 mt-2 h-4';
+            }
+        }
+
+        function displaySuggestions(matches) {
+            studentSuggestions.innerHTML = '';
+            if (matches.length === 0) {
+                studentSuggestions.classList.add('hidden');
+                return;
+            }
+
+            matches.forEach(student => {
+                const suggestionDiv = document.createElement('div');
+                suggestionDiv.textContent = `${student.firstName} ${student.lastName}`;
+                suggestionDiv.className = 'p-3 hover:bg-gray-100 cursor-pointer';
+                suggestionDiv.addEventListener('mousedown', () => { // Use mousedown to fire before blur
+                    studentFirstNameInput.value = student.firstName;
+                    studentLastNameInput.value = student.lastName;
+                    studentSuggestions.innerHTML = '';
+                    studentSuggestions.classList.add('hidden');
+                    isStudentSelected = true;
+                    studentNameStatus.textContent = '✓ Name selected';
+                    studentNameStatus.className = 'text-xs text-green-600 mt-2 h-4';
+                });
+                studentSuggestions.appendChild(suggestionDiv);
+            });
+
+            studentSuggestions.classList.remove('hidden');
+        }
+
+        // --- Form Submission ---
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const parentName = parentNameInput.value.trim();
+            const reason = reasonSelect.value;
+            const studentFirstName = studentFirstNameInput.value.trim();
+            const studentLastName = studentLastNameInput.value.trim();
+            const studentFullName = `${studentFirstName} ${studentLastName}`;
+
+            let errors = [];
+            if (!isStudentSelected) {
+                 errors.push('Please verify the student\'s name and select it from the list.');
+            }
+            if (!parentName) errors.push('Parent/Guardian name is required.');
+            if (!reason) errors.push('Please select a reason.');
+
+            if (errors.length > 0) {
+                showMessage(errors.join('<br>'), 'error');
+                return;
+            }
+
+            const checkinData = {
+                studentName: studentFullName,
+                parentName: parentName,
+                reason: reason,
+                type: currentActionType,
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/checkins`), checkinData);
+                showMessage(`Successfully processed ${currentActionType} for ${studentFullName}.`, 'success');
+                setTimeout(showInitialScreen, 2500); // Go back to start after success
+            } catch (error) {
+                console.error("Error writing document: ", error);
+                showMessage(`Could not save the record. Please try again.`, 'error');
+            }
+        }
+        
+        // --- Admin & PIN Logic ---
+        function showAdminView() {
+            parentView.classList.add('hidden');
+            adminView.classList.remove('hidden');
+        }
+
+        function handleLogout() {
+            adminView.classList.add('hidden');
+            parentView.classList.remove('hidden');
+            showInitialScreen();
+        }
+
+        function handleSubmitPin() {
+            if (pinInput.value === '4160') {
+                pinModal.classList.add('hidden');
+                showAdminView();
+            } else {
+                pinError.textContent = 'Invalid PIN.';
+                pinInput.value = '';
+                pinInput.focus();
+            }
+        }
+
+        async function handleResetReport() {
+            confirmReset.disabled = true;
+            confirmReset.textContent = 'Resetting...';
+            
+            try {
+                const collectionPath = `artifacts/${appId}/public/data/checkins`;
+                const collectionRef = collection(db, collectionPath);
+                const querySnapshot = await getDocs(collectionRef);
+                
+                const deletePromises = [];
+                querySnapshot.forEach((docSnapshot) => {
+                    deletePromises.push(deleteDoc(doc(db, collectionPath, docSnapshot.id)));
+                });
+
+                await Promise.all(deletePromises);
+                
+                showMessage('Activity log has been successfully cleared.', 'success');
+
+            } catch (error) {
+                console.error("Error resetting report: ", error);
+                showMessage('An error occurred while clearing the log.', 'error');
+            } finally {
+                resetModal.classList.add('hidden');
+                confirmReset.disabled = false;
+                confirmReset.textContent = 'Yes, Reset It';
+            }
+        }
+
+        function listenForActivity() {
+             const q = query(collection(db, `artifacts/${appId}/public/data/checkins`), orderBy("timestamp", "desc"), limit(50));
+            onSnapshot(q, (snapshot) => {
+                logLoader.classList.add('hidden');
+                activityLogBody.innerHTML = '';
+                const activities = snapshot.docs.map(doc => doc.data());
+
+                if (activities.length === 0) {
+                    noActivityPara.classList.remove('hidden');
+                    activityLogTable.classList.add('hidden');
+                } else {
+                    noActivityPara.classList.add('hidden');
+                    activityLogTable.classList.remove('hidden');
+                    activities.forEach(data => {
+                        const tr = document.createElement('tr');
+                        const jsDate = data.timestamp ? data.timestamp.toDate() : null;
+                        const date = jsDate ? jsDate.toLocaleDateString() : 'N/A';
+                        const time = jsDate ? jsDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+                        const statusClass = data.type === 'Check In Late' ? 'text-blue-600' : 'text-yellow-600';
+                        tr.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.studentName}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parentName}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold ${statusClass}">${data.type}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.reason || 'N/A'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${time}</td>
+                        `;
+                        activityLogBody.appendChild(tr);
+                    });
+                }
+            }, (error) => {
+                console.error("Error listening to activity log:", error);
+                logLoader.classList.add('hidden');
+                noActivityPara.textContent = 'Could not load activity log.';
+                noActivityPara.classList.remove('hidden');
+            });
+        }
+
+        // --- PDF Generation ---
+        function generatePDFReport() {
+            const logTable = document.getElementById('activityLog');
+            const logBody = logTable.querySelector('tbody');
+
+            if (!logTable || logBody.children.length === 0) {
+                // Using a simple alert for browsers that might block custom modals in this context
+                alert('No activity to report.');
+                return;
+            }
+
+            // Create a container element for PDF generation that won't be displayed on screen
+            const reportContainer = document.createElement('div');
+            reportContainer.style.padding = '1in'; // Standard margin
+
+            // Add a title to the report
+            const title = document.createElement('h1');
+            const today = new Date();
+            title.innerText = `Windsor Woods ES Activity Report - ${today.toLocaleDateString()}`;
+            title.style.textAlign = 'center';
+            title.style.marginBottom = '20px';
+            title.style.fontSize = '24px';
+            title.style.fontFamily = 'Inter, sans-serif';
+            
+            // Clone the visible table to style it for the PDF without affecting the screen view
+            const tableClone = logTable.cloneNode(true);
+            tableClone.style.width = '100%';
+            tableClone.style.borderCollapse = 'collapse';
+            tableClone.style.fontFamily = 'Inter, sans-serif';
+            tableClone.style.fontSize = '10pt';
+
+            // Apply basic styles for a clean, printable table
+            Array.from(tableClone.querySelectorAll('th, td')).forEach(cell => {
+                cell.style.border = '1px solid #cccccc';
+                cell.style.padding = '8px';
+                cell.style.textAlign = 'left';
+            });
+            Array.from(tableClone.querySelectorAll('th')).forEach(th => {
+                th.style.backgroundColor = '#f4f4f4';
+                th.style.fontWeight = 'bold';
+            });
+            // Remove Tailwind text color classes that might interfere
+             Array.from(tableClone.querySelectorAll('.text-blue-600, .text-yellow-600')).forEach(el => {
+                el.classList.remove('text-blue-600', 'text-yellow-600');
+                el.style.color = '#000000'; // Set a standard black color
+            });
+
+            reportContainer.appendChild(title);
+            reportContainer.appendChild(tableClone);
+
+            const dateString = today.toISOString().split('T')[0];
+            const options = {
+                margin:       0.5,
+                filename:     `WWES_Activity_Report_${dateString}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+            };
+
+            // Use the library to generate the PDF from the prepared container
+            html2pdf().set(options).from(reportContainer).save();
+        }
+
+
+        // --- UI Helper ---
+        function showMessage(msg, type = 'info') {
+            const classes = {
+                success: 'bg-green-100 border-green-400 text-green-700',
+                error: 'bg-red-100 border-red-400 text-red-700',
+                info: 'bg-blue-100 border-blue-400 text-blue-700'
+            };
+            messageDiv.className = `border px-4 py-3 rounded-lg relative ${classes[type] || classes.info}`;
+            messageDiv.innerHTML = msg;
+            setTimeout(() => { messageDiv.innerHTML = ''; messageDiv.className = ''; }, 5000);
+        }
+
+        // --- Event Listeners ---
+        startCheckInBtn.addEventListener('click', () => showForm('Check In Late'));
+        startPickUpBtn.addEventListener('click', () => showForm('Pick Up Early'));
+        startAdminBtn.addEventListener('click', () => {
+            pinInput.value = '';
+            pinError.textContent = '';
+            pinModal.classList.remove('hidden');
+            pinInput.focus();
+        });
+        backButton.addEventListener('click', showInitialScreen);
+        form.addEventListener('submit', handleFormSubmit);
+        verifyNameBtn.addEventListener('click', findStudentMatches);
+        
+        logoutBtn.addEventListener('click', handleLogout);
+        printReportBtn.addEventListener('click', generatePDFReport);
+        resetReportBtn.addEventListener('click', () => resetModal.classList.remove('hidden'));
+
+        function resetVerificationStatus() {
+            if (isStudentSelected) {
+                isStudentSelected = false;
+                studentNameStatus.textContent = '';
+                studentNameStatus.className = 'text-xs text-gray-600 mt-2 h-4';
+            }
+        }
+        studentFirstNameInput.addEventListener('input', resetVerificationStatus);
+        studentLastNameInput.addEventListener('input', resetVerificationStatus);
+
+        document.body.addEventListener('click', (e) => {
+            if (!studentFirstNameInput.contains(e.target) && 
+                !studentLastNameInput.contains(e.target) && 
+                !studentSuggestions.contains(e.target) &&
+                !verifyNameBtn.contains(e.target)) { 
+                 studentSuggestions.classList.add('hidden');
+            }
+        });
+        
+        submitPin.addEventListener('click', handleSubmitPin);
+        cancelPin.addEventListener('click', () => pinModal.classList.add('hidden'));
+        pinInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') handleSubmitPin(); });
+
+        cancelReset.addEventListener('click', () => resetModal.classList.add('hidden'));
+        confirmReset.addEventListener('click', handleResetReport);
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFirebase();
+        });
+    </script>
+</body>
+</html>
+
+
+
