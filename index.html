@@ -35,40 +35,6 @@
             justify-content: center;
             z-index: 1000;
         }
-        @media print {
-            /* Hide the parent view and modal, only showing the admin dashboard container */
-            body > #parentView, body > #pinModal {
-                display: none;
-            }
-            
-            /* Inside the admin dashboard, hide the UI elements like titles and buttons */
-            #adminView .flex, #adminView #printReportBtn {
-                display: none;
-            }
-
-            /* Reset padding and shadows for a clean print layout */
-            #adminView .p-8 {
-                padding: 0;
-            }
-            #adminView .bg-white, #adminView {
-                box-shadow: none;
-                border: none;
-            }
-            
-            /* Position the activity log table to fill the printed page */
-            #activityLog {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                font-size: 10pt; /* Adjust font size for readability */
-            }
-
-            /* Ensure the table header repeats on every page */
-             #activityLog thead {
-                display: table-header-group;
-            }
-        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -100,40 +66,47 @@
 
                 <!-- Main Content (Form) -->
                 <div id="mainContent" class="hidden">
-                    <button id="backButton" class="mb-4 text-sm text-blue-600 hover:underline">&larr; Back to selection</button>
+                    <button id="backButton" class="mb-4 text-sm text-blue-600 hover:underline">&larr; Back</button>
                     <form id="checkinForm" class="space-y-6">
-                        <div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
-                                <div>
-                                    <label for="studentFirstName" class="block text-sm font-medium text-gray-700 mb-1">Student's First Name</label>
-                                    <input type="text" id="studentFirstName" name="studentFirstName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Jane" autocomplete="off">
-                                </div>
-                                <div class="relative">
-                                    <label for="studentLastName" class="block text-sm font-medium text-gray-700 mb-1">Student's Last Name</label>
-                                    <input type="text" id="studentLastName" name="studentLastName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Doe" autocomplete="off">
-                                    <div id="studentSuggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg shadow-lg hidden max-h-48 overflow-y-auto"></div>
-                                </div>
-                            </div>
-                            <div class="flex items-center flex-wrap gap-x-4 mt-3">
-                                <button type="button" id="verifyNameBtn" class="shrink-0 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition duration-150 ease-in-out">Verify Name</button>
-                                <p class="text-xs text-gray-500 italic">Do not use shortened or nicknames.</p>
-                            </div>
-                            <p id="studentNameStatus" class="text-xs text-gray-600 mt-2 h-4"></p>
-                        </div>
-
-                        <div>
-                            <label for="parentName" class="block text-sm font-medium text-gray-700 mb-1">Parent/Guardian's Full Name</label>
-                            <input type="text" id="parentName" name="parentName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., John Smith">
-                        </div>
-
-                        <div>
-                            <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
-                            <select id="reason" name="reason" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white">
-                                <!-- Options will be populated by JS -->
-                            </select>
-                        </div>
                         
-                        <button type="submit" id="submitBtn" class="w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out">Submit</button>
+                        <!-- Step 1: Student Name Verification -->
+                        <div id="nameEntryStep">
+                            <div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+                                    <div>
+                                        <label for="studentFirstName" class="block text-sm font-medium text-gray-700 mb-1">Student's First Name</label>
+                                        <input type="text" id="studentFirstName" name="studentFirstName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Jane" autocomplete="off">
+                                    </div>
+                                    <div class="relative">
+                                        <label for="studentLastName" class="block text-sm font-medium text-gray-700 mb-1">Student's Last Name</label>
+                                        <input type="text" id="studentLastName" name="studentLastName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Doe" autocomplete="off">
+                                        <div id="studentSuggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-b-lg shadow-lg hidden max-h-48 overflow-y-auto"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center flex-wrap gap-x-4 mt-3">
+                                    <button type="button" id="verifyAndContinueBtn" class="shrink-0 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">Verify Name and Continue</button>
+                                    <p class="text-xs text-gray-500 italic">Do not use shortened or nicknames.</p>
+                                </div>
+                                <p id="studentNameStatus" class="text-xs text-gray-600 mt-2 h-4"></p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Parent Details and Submission -->
+                        <div id="detailsStep" class="hidden space-y-6">
+                            <div>
+                                <label for="parentName" class="block text-sm font-medium text-gray-700 mb-1">Parent/Guardian's Full Name</label>
+                                <input type="text" id="parentName" name="parentName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., John Smith">
+                            </div>
+
+                            <div>
+                                <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                                <select id="reason" name="reason" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white">
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+                            
+                            <button type="submit" id="submitBtn" class="w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out">Submit</button>
+                        </div>
                     </form>
                 </div>
 
@@ -219,6 +192,8 @@
         const parentView = document.getElementById('parentView');
         const initialScreen = document.getElementById('initialScreen');
         const mainContent = document.getElementById('mainContent');
+        const nameEntryStep = document.getElementById('nameEntryStep');
+        const detailsStep = document.getElementById('detailsStep');
         const startCheckInBtn = document.getElementById('startCheckInBtn');
         const startPickUpBtn = document.getElementById('startPickUpBtn');
         const startAdminBtn = document.getElementById('startAdminBtn');
@@ -233,7 +208,7 @@
         const reasonSelect = document.getElementById('reason');
         const submitBtn = document.getElementById('submitBtn');
         const messageDiv = document.getElementById('message');
-        const verifyNameBtn = document.getElementById('verifyNameBtn');
+        const verifyAndContinueBtn = document.getElementById('verifyAndContinueBtn');
         
         // Admin View Elements
         const adminView = document.getElementById('adminView');
@@ -292,7 +267,7 @@
             { firstName: "Emily", lastName: "Freeman" }, { firstName: "Taylor", lastName: "Freeman-Gatlin" }, { firstName: "Heidi", lastName: "Freihofer" }, { firstName: "Reagan", lastName: "Freihofer" }, { firstName: "Yara", lastName: "Gaviria" },
             { firstName: "Emma", lastName: "Gayarski" }, { firstName: "Neveah", lastName: "Getson" }, { firstName: "Colton", lastName: "Glende" }, { firstName: "Greyson", lastName: "Godfrey" }, { firstName: "Devlin", lastName: "Gomez" },
             { firstName: "Luella", lastName: "Gomez" }, { firstName: "Julia", lastName: "Goncalves-Silva" }, { firstName: "Melanie", lastName: "Gonzales" }, { firstName: "Jordan", lastName: "Gonzalez" }, { firstName: "Nelly", lastName: "Gonzalez" },
-            { firstName: "Iris", lastName: "Grace" }, { firstName: "Nora", lastName: "Gray" }, { firstName: "James", lastName: "Greene" }, { firstName: "Darius", lastName: "Groome" }, { firstName: "Kallie", lastName: "Groves" },
+            { firstName: "Kartier", lastName: "Goodson" }, { firstName: "Iris", lastName: "Grace" }, { firstName: "Nora", lastName: "Gray" }, { firstName: "James", lastName: "Greene" }, { firstName: "Darius", lastName: "Groome" }, { firstName: "Kallie", lastName: "Groves" },
             { firstName: "Macie", lastName: "Groves" }, { firstName: "Lucas", lastName: "Guidry" }, { firstName: "Catalina", lastName: "Guiles" }, { firstName: "Jaxson", lastName: "Guswiler" }, { firstName: "Julianna", lastName: "Guswiler" },
             { firstName: "A'Hriyon", lastName: "Hall" }, { firstName: "Asher", lastName: "Hall" }, { firstName: "Olivia", lastName: "Hall" }, { firstName: "Amarion", lastName: "Hamberry-Murphy" }, { firstName: "Jordan", lastName: "Hamilton" },
             { firstName: "Travis", lastName: "Hamlin" }, { firstName: "Hatch", lastName: "Harding" }, { firstName: "Elijah", lastName: "Harris" }, { firstName: "Dakota", lastName: "Harver" }, { firstName: "Lillian", lastName: "Hastings" },
@@ -371,17 +346,8 @@
         
         async function initializeFirebase() {
             try {
-                // Use the environment-provided config object
-               const firebaseConfig = {
-  apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
-  authDomain: "windsor-woods-es-student-check.firebaseapp.com",
-  projectId: "windsor-woods-es-student-check",
-  storageBucket: "windsor-woods-es-student-check.firebasestorage.app",
-  messagingSenderId: "347967296020",
-  appId: "1:347967296020:web:dde6b34e166034debacd01"
-};
-               
-                // Check if the config is empty/invalid
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                
                 if (!firebaseConfig.apiKey) {
                     console.error("Firebase config is missing or invalid.");
                     logLoader.innerHTML = '<p class="text-red-500">Error: Firebase is not configured correctly.</p>';
@@ -392,7 +358,6 @@
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                // Use the environment-provided auth token if available
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
@@ -412,8 +377,14 @@
             currentActionType = actionType;
             initialScreen.classList.add('hidden');
             mainContent.classList.remove('hidden');
+            
+            // Start at the name entry step
+            nameEntryStep.classList.remove('hidden');
+            detailsStep.classList.add('hidden');
+            
             portalTitle.textContent = actionType;
             isStudentSelected = false;
+            backButton.textContent = '← Back to selection';
             
             // Configure form based on action
             reasonSelect.innerHTML = '';
@@ -441,8 +412,28 @@
             initialScreen.classList.remove('hidden');
             portalTitle.textContent = 'Student Check-in / Pick-up Portal';
             form.reset();
-            studentNameStatus.textContent = ''; // Reset status on return
+            studentNameStatus.textContent = '';
             studentSuggestions.classList.add('hidden');
+        }
+
+        function proceedToDetailsStep() {
+            nameEntryStep.classList.add('hidden');
+            detailsStep.classList.remove('hidden');
+            backButton.textContent = '← Back to student name';
+            parentNameInput.focus();
+        }
+
+        function handleBackClick() {
+            // If we are on the details step (step 2), go back to name entry (step 1)
+            if (!detailsStep.classList.contains('hidden')) {
+                detailsStep.classList.add('hidden');
+                nameEntryStep.classList.remove('hidden');
+                backButton.textContent = '← Back to selection';
+            } 
+            // Otherwise, we are on the name entry step (step 1), so go to the initial screen
+            else {
+                showInitialScreen();
+            }
         }
 
         // --- Student Name Search & Validation ---
@@ -451,10 +442,10 @@
             const inputLastName = studentLastNameInput.value.trim().toLowerCase();
             isStudentSelected = false;
             studentNameStatus.textContent = ''; 
-            studentSuggestions.classList.add('hidden'); // Hide old suggestions
+            studentSuggestions.classList.add('hidden');
 
             if (inputFirstName.length < 1 && inputLastName.length < 1) {
-                return; // Don't search if both fields are empty
+                return; 
             }
 
             const matches = students.filter(student => {
@@ -463,23 +454,18 @@
                 return fNameMatch && lNameMatch;
             }).slice(0, 5);
             
-            // --- Smart Verification Logic ---
             if (matches.length === 1 && matches[0].firstName.toLowerCase() === inputFirstName && matches[0].lastName.toLowerCase() === inputLastName) {
-                // If there's ONE exact match, auto-select it.
                 const student = matches[0];
                 studentFirstNameInput.value = student.firstName;
                 studentLastNameInput.value = student.lastName;
                 isStudentSelected = true;
-                studentNameStatus.textContent = '✓ Name verified';
-                studentNameStatus.className = 'text-xs text-green-600 mt-2 h-4';
                 studentSuggestions.classList.add('hidden');
+                proceedToDetailsStep();
             } else if (matches.length > 0) {
-                // If there are multiple partial matches, show the list.
                 studentNameStatus.textContent = 'Please select a student from the list below.';
                 studentNameStatus.className = 'text-xs text-blue-600 mt-2 h-4';
                 displaySuggestions(matches);
             } else {
-                // If there are no matches.
                 studentNameStatus.textContent = 'No matches found. Please check spelling.';
                 studentNameStatus.className = 'text-xs text-red-600 mt-2 h-4';
             }
@@ -496,14 +482,13 @@
                 const suggestionDiv = document.createElement('div');
                 suggestionDiv.textContent = `${student.firstName} ${student.lastName}`;
                 suggestionDiv.className = 'p-3 hover:bg-gray-100 cursor-pointer';
-                suggestionDiv.addEventListener('mousedown', () => { // Use mousedown to fire before blur
+                suggestionDiv.addEventListener('mousedown', () => {
                     studentFirstNameInput.value = student.firstName;
                     studentLastNameInput.value = student.lastName;
                     studentSuggestions.innerHTML = '';
                     studentSuggestions.classList.add('hidden');
                     isStudentSelected = true;
-                    studentNameStatus.textContent = '✓ Name selected';
-                    studentNameStatus.className = 'text-xs text-green-600 mt-2 h-4';
+                    proceedToDetailsStep();
                 });
                 studentSuggestions.appendChild(suggestionDiv);
             });
@@ -522,7 +507,7 @@
 
             let errors = [];
             if (!isStudentSelected) {
-                 errors.push('Please verify the student\'s name and select it from the list.');
+                 errors.push('Student name was not verified.');
             }
             if (!parentName) errors.push('Parent/Guardian name is required.');
             if (!reason) errors.push('Please select a reason.');
@@ -543,7 +528,7 @@
             try {
                 await addDoc(collection(db, `artifacts/${appId}/public/data/checkins`), checkinData);
                 showMessage(`Successfully processed ${currentActionType} for ${studentFullName}.`, 'success');
-                setTimeout(showInitialScreen, 2500); // Go back to start after success
+                setTimeout(showInitialScreen, 2500);
             } catch (error) {
                 console.error("Error writing document: ", error);
                 showMessage(`Could not save the record. Please try again.`, 'error');
@@ -645,16 +630,11 @@
             const logBody = logTable.querySelector('tbody');
 
             if (!logTable || logBody.children.length === 0) {
-                // Using a simple alert for browsers that might block custom modals in this context
                 alert('No activity to report.');
                 return;
             }
-
-            // Create a container element for PDF generation that won't be displayed on screen
             const reportContainer = document.createElement('div');
-            reportContainer.style.padding = '1in'; // Standard margin
-
-            // Add a title to the report
+            reportContainer.style.padding = '1in';
             const title = document.createElement('h1');
             const today = new Date();
             title.innerText = `Windsor Woods ES Activity Report - ${today.toLocaleDateString()}`;
@@ -663,14 +643,12 @@
             title.style.fontSize = '24px';
             title.style.fontFamily = 'Inter, sans-serif';
             
-            // Clone the visible table to style it for the PDF without affecting the screen view
             const tableClone = logTable.cloneNode(true);
             tableClone.style.width = '100%';
             tableClone.style.borderCollapse = 'collapse';
             tableClone.style.fontFamily = 'Inter, sans-serif';
             tableClone.style.fontSize = '10pt';
 
-            // Apply basic styles for a clean, printable table
             Array.from(tableClone.querySelectorAll('th, td')).forEach(cell => {
                 cell.style.border = '1px solid #cccccc';
                 cell.style.padding = '8px';
@@ -680,10 +658,9 @@
                 th.style.backgroundColor = '#f4f4f4';
                 th.style.fontWeight = 'bold';
             });
-            // Remove Tailwind text color classes that might interfere
              Array.from(tableClone.querySelectorAll('.text-blue-600, .text-yellow-600')).forEach(el => {
                 el.classList.remove('text-blue-600', 'text-yellow-600');
-                el.style.color = '#000000'; // Set a standard black color
+                el.style.color = '#000000';
             });
 
             reportContainer.appendChild(title);
@@ -698,10 +675,8 @@
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
             };
 
-            // Use the library to generate the PDF from the prepared container
             html2pdf().set(options).from(reportContainer).save();
         }
-
 
         // --- UI Helper ---
         function showMessage(msg, type = 'info') {
@@ -724,9 +699,9 @@
             pinModal.classList.remove('hidden');
             pinInput.focus();
         });
-        backButton.addEventListener('click', showInitialScreen);
+        backButton.addEventListener('click', handleBackClick);
         form.addEventListener('submit', handleFormSubmit);
-        verifyNameBtn.addEventListener('click', findStudentMatches);
+        verifyAndContinueBtn.addEventListener('click', findStudentMatches);
         
         logoutBtn.addEventListener('click', handleLogout);
         printReportBtn.addEventListener('click', generatePDFReport);
@@ -746,7 +721,7 @@
             if (!studentFirstNameInput.contains(e.target) && 
                 !studentLastNameInput.contains(e.target) && 
                 !studentSuggestions.contains(e.target) &&
-                !verifyNameBtn.contains(e.target)) { 
+                !verifyAndContinueBtn.contains(e.target)) { 
                  studentSuggestions.classList.add('hidden');
             }
         });
@@ -765,8 +740,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
