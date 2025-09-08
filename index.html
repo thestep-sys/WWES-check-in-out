@@ -342,15 +342,22 @@
 
         // --- Firebase Setup ---
         let db;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-checkin-app-v9-admin';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-checkin-app';
         
         async function initializeFirebase() {
             try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-                
+                // This will be automatically provided by the hosting environment.
+                const firebaseConfigJSON = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+                const firebaseConfig = JSON.parse(firebaseConfigJSON);
+
                 if (!firebaseConfig.apiKey) {
                     console.error("Firebase config is missing or invalid.");
-                    logLoader.innerHTML = '<p class="text-red-500">Error: Firebase is not configured correctly.</p>';
+                    logLoader.innerHTML = '<p class="text-red-500 font-semibold">Error: Firebase is not configured correctly.</p>';
+                    // Disable form functionality if firebase is not set up
+                    Array.from(document.getElementsByTagName("button")).forEach(button => {
+                        if(button.id !== 'startAdminBtn') button.disabled = true;
+                    });
+                    startAdminBtn.textContent = 'Admin Login (Offline)';
                     return;
                 }
 
@@ -358,8 +365,9 @@
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
                 } else {
                     await signInAnonymously(auth);
                 }
@@ -740,3 +748,4 @@
     </script>
 </body>
 </html>
+
