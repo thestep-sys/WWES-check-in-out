@@ -347,17 +347,14 @@
             try {
                 // This will be automatically provided by the hosting environment.
                 const firebaseConfigJSON = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-                const firebaseConfig = JSON.parse(firebaseConfigJSON);
-
-                if (!firebaseConfig.apiKey) {
-                    console.error("Firebase config is missing or invalid.");
-                    logLoader.innerHTML = '<p class="text-red-500 font-semibold">Error: Firebase is not configured correctly.</p>';
-                    // Disable form functionality if firebase is not set up
-                    Array.from(document.getElementsByTagName("button")).forEach(button => {
-                        if(button.id !== 'startAdminBtn') button.disabled = true;
-                    });
-                    startAdminBtn.textContent = 'Admin Login (Offline)';
-                    return;
+               const firebaseConfig = {
+  apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
+  authDomain: "windsor-woods-es-student-check.firebaseapp.com",
+  projectId: "windsor-woods-es-student-check",
+  storageBucket: "windsor-woods-es-student-check.firebasestorage.app",
+  messagingSenderId: "347967296020",
+  appId: "1:347967296020:web:dde6b34e166034debacd01"
+};
                 }
                 
                 const app = initializeApp(firebaseConfig);
@@ -750,3 +747,4 @@
     </script>
 </body>
 </html>
+
