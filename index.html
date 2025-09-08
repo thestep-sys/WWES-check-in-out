@@ -342,7 +342,6 @@
 
         // --- Firebase Setup ---
         let db;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-checkin-app';
         
         async function initializeFirebase() {
             try {
@@ -360,7 +359,7 @@
                     startAdminBtn.textContent = 'Admin Login (Offline)';
                     return;
                 }
-
+                
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 const auth = getAuth(app);
@@ -524,6 +523,8 @@
                 showMessage(errors.join('<br>'), 'error');
                 return;
             }
+            
+            const collectionPath = `wwes_checkins`;
 
             const checkinData = {
                 studentName: studentFullName,
@@ -534,7 +535,7 @@
             };
 
             try {
-                await addDoc(collection(db, `artifacts/${appId}/public/data/checkins`), checkinData);
+                await addDoc(collection(db, collectionPath), checkinData);
                 showMessage(`Successfully processed ${currentActionType} for ${studentFullName}.`, 'success');
                 setTimeout(showInitialScreen, 2500);
             } catch (error) {
@@ -571,7 +572,7 @@
             confirmReset.textContent = 'Resetting...';
             
             try {
-                const collectionPath = `artifacts/${appId}/public/data/checkins`;
+                const collectionPath = `wwes_checkins`;
                 const collectionRef = collection(db, collectionPath);
                 const querySnapshot = await getDocs(collectionRef);
                 
@@ -595,7 +596,8 @@
         }
 
         function listenForActivity() {
-             const q = query(collection(db, `artifacts/${appId}/public/data/checkins`), orderBy("timestamp", "desc"), limit(50));
+             const collectionPath = `wwes_checkins`;
+             const q = query(collection(db, collectionPath), orderBy("timestamp", "desc"), limit(50));
             onSnapshot(q, (snapshot) => {
                 logLoader.classList.add('hidden');
                 activityLogBody.innerHTML = '';
@@ -627,7 +629,7 @@
             }, (error) => {
                 console.error("Error listening to activity log:", error);
                 logLoader.classList.add('hidden');
-                noActivityPara.textContent = 'Could not load activity log.';
+                noActivityPara.textContent = 'Could not load activity log. Error: ' + error.message;
                 noActivityPara.classList.remove('hidden');
             });
         }
@@ -748,4 +750,3 @@
     </script>
 </body>
 </html>
-
