@@ -55,7 +55,7 @@
                 <!-- Initial Screen -->
                 <div id="initialScreen">
                     <p class="text-center text-gray-600 mb-6">Please select an option:</p>
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-10">
                         <div class="flex flex-col sm:flex-row sm:space-x-4">
                             <button type="button" id="startCheckInBtn" class="w-full bg-blue-600 text-white font-semibold py-4 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out text-lg">Check In Late</button>
                             <button type="button" id="startPickUpBtn" class="w-full bg-yellow-500 text-white font-semibold py-4 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition duration-150 ease-in-out text-lg mt-4 sm:mt-0">Pick Up Early</button>
@@ -193,7 +193,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- DOM Elements ---
@@ -352,13 +352,10 @@
         // --- Firebase Setup ---
         let db;
         
-        async function initializeFirebase() {
-            try {
-                // This will be automatically provided by the hosting environment.
-                const firebaseConfigJSON = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-                const firebaseConfig = JSON.parse(firebaseConfigJSON);
-
-              const firebaseConfig = {
+        // --- IMPORTANT ---
+        // PASTE YOUR FIREBASE CONFIG OBJECT HERE
+        // You can get this from your Firebase project settings.
+        const firebaseConfig = {
   apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
   authDomain: "windsor-woods-es-student-check.firebaseapp.com",
   projectId: "windsor-woods-es-student-check",
@@ -366,18 +363,25 @@
   messagingSenderId: "347967296020",
   appId: "1:347967296020:web:dde6b34e166034debacd01"
 };
+        // --- END of Firebase Config ---
+
+        async function initializeFirebase() {
+            try {
+                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    console.error("Firebase config is missing or invalid. Please paste your config object.");
+                    logLoader.innerHTML = '<p class="text-red-500 font-semibold">Error: Firebase not configured. Contact admin.</p>';
+                    Array.from(document.getElementsByTagName("button")).forEach(button => {
+                        if(button.id !== 'startAdminBtn') button.disabled = true;
+                    });
+                    startAdminBtn.textContent = 'Admin Login (Offline)';
+                    return;
+                }
                 
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                
+                await signInAnonymously(auth);
                 listenForActivity();
 
             } catch (error) {
@@ -392,7 +396,6 @@
             initialScreen.classList.add('hidden');
             mainContent.classList.remove('hidden');
             
-            // Start at the name entry step
             nameEntryStep.classList.remove('hidden');
             detailsStep.classList.add('hidden');
             
@@ -400,7 +403,6 @@
             isStudentSelected = false;
             backButton.textContent = '← Back to selection';
             
-            // Configure form based on action
             reasonSelect.innerHTML = '';
             const reasons = {
                 'Check In Late': ['Doctor/Dentist appointment', 'Personal', 'Overslept', 'Traffic', 'Running late', 'Bus No-show', 'Appointment'],
@@ -434,16 +436,15 @@
             nameEntryStep.classList.add('hidden');
             detailsStep.classList.remove('hidden');
             parentFirstNameInput.focus();
+            backButton.textContent = '← Back to student name';
         }
 
         function handleBackClick() {
-            // If we are on the details step (step 2), go back to name entry (step 1)
             if (!detailsStep.classList.contains('hidden')) {
                 detailsStep.classList.add('hidden');
                 nameEntryStep.classList.remove('hidden');
                 backButton.textContent = '← Back to selection';
             } 
-            // Otherwise, we are on the name entry step (step 1), so go to the initial screen
             else {
                 showInitialScreen();
             }
@@ -533,8 +534,7 @@
                 return;
             }
             
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
-            const collectionPath = `artifacts/${appId}/public/data/checkins`;
+            const collectionPath = `wwes_checkins`;
 
             const checkinData = {
                 studentName: studentFullName,
@@ -582,8 +582,7 @@
             confirmReset.textContent = 'Resetting...';
             
             try {
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
-                const collectionPath = `artifacts/${appId}/public/data/checkins`;
+                const collectionPath = `wwes_checkins`;
                 const collectionRef = collection(db, collectionPath);
                 const querySnapshot = await getDocs(collectionRef);
                 
@@ -607,8 +606,7 @@
         }
 
         function listenForActivity() {
-             const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
-             const collectionPath = `artifacts/${appId}/public/data/checkins`;
+             const collectionPath = `wwes_checkins`;
              const q = query(collection(db, collectionPath), orderBy("timestamp", "desc"), limit(50));
             onSnapshot(q, (snapshot) => {
                 logLoader.classList.add('hidden');
@@ -762,4 +760,3 @@
     </script>
 </body>
 </html>
-
