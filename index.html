@@ -380,19 +380,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-        async function initializeFirebase() {
-            try {
-                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
-                    console.error("Firebase config is missing or invalid. Please paste your config object.");
-                    logLoader.innerHTML = '<p class="text-red-500 font-semibold">Error: Firebase not configured. Contact admin.</p>';
-                    Array.from(document.getElementsByTagName("button")).forEach(button => {
-                        if(button.id !== 'startAdminBtn') button.disabled = true;
-                    });
-                    startAdminBtn.textContent = 'Admin Login (Offline)';
-                    return;
-                }
+const firebaseConfig = {
+  apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
+  authDomain: "windsor-woods-es-student-check.firebaseapp.com",
+  projectId: "windsor-woods-es-student-check",
+  storageBucket: "windsor-woods-es-student-check.firebasestorage.app",
+  messagingSenderId: "347967296020",
+  appId: "1:347967296020:web:dde6b34e166034debacd01"
+};
                 
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
@@ -824,4 +819,5 @@ const app = initializeApp(firebaseConfig);
     </script>
 </body>
 </html>
+
 
