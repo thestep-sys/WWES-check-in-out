@@ -200,7 +200,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- DOM Elements ---
@@ -364,10 +364,10 @@
         // --- Firebase Setup ---
         let db;
         
-        async function initializeFirebase() {
-            try {
-                // This will be automatically provided by the hosting environment.
-               // Import the functions you need from the SDKs you need
+        // --- IMPORTANT ---
+        // PASTE YOUR FIREBASE CONFIG OBJECT HERE
+        // You can get this from your Firebase project settings.
+       // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -384,18 +384,25 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+        // --- END of Firebase Config ---
+
+        async function initializeFirebase() {
+            try {
+                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    console.error("Firebase config is missing or invalid. Please paste your config object.");
+                    logLoader.innerHTML = '<p class="text-red-500 font-semibold">Error: Firebase not configured. Contact admin.</p>';
+                    Array.from(document.getElementsByTagName("button")).forEach(button => {
+                        if(button.id !== 'startAdminBtn') button.disabled = true;
+                    });
+                    startAdminBtn.textContent = 'Admin Login (Offline)';
+                    return;
+                }
                 
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                
+                await signInAnonymously(auth);
                 listenForActivity();
 
             } catch (error) {
@@ -579,8 +586,7 @@ const app = initializeApp(firebaseConfig);
                 return;
             }
             
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
-            const collectionPath = `artifacts/${appId}/public/data/checkins`;
+            const collectionPath = `wwes_checkins`;
 
             const batch = writeBatch(db);
 
@@ -635,8 +641,7 @@ const app = initializeApp(firebaseConfig);
             confirmReset.textContent = 'Resetting...';
             
             try {
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
-                const collectionPath = `artifacts/${appId}/public/data/checkins`;
+                const collectionPath = `wwes_checkins`;
                 const collectionRef = collection(db, collectionPath);
                 const querySnapshot = await getDocs(collectionRef);
                 
@@ -660,8 +665,7 @@ const app = initializeApp(firebaseConfig);
         }
 
         function listenForActivity() {
-             const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
-             const collectionPath = `artifacts/${appId}/public/data/checkins`;
+             const collectionPath = `wwes_checkins`;
              const q = query(collection(db, collectionPath), orderBy("timestamp", "desc"), limit(50));
             onSnapshot(q, (snapshot) => {
                 logLoader.classList.add('hidden');
