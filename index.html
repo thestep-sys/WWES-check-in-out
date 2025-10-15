@@ -55,7 +55,7 @@
                 <!-- Initial Screen -->
                 <div id="initialScreen">
                     <p class="text-center text-gray-600 mb-6">Please select an option:</p>
-                    <div class="flex flex-col gap-10">
+                    <div class="flex flex-col gap-6">
                         <div class="flex flex-col sm:flex-row sm:space-x-4">
                             <button type="button" id="startCheckInBtn" class="w-full bg-blue-600 text-white font-semibold py-4 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out text-lg">Check In Late</button>
                             <button type="button" id="startPickUpBtn" class="w-full bg-yellow-500 text-white font-semibold py-4 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition duration-150 ease-in-out text-lg mt-4 sm:mt-0">Pick Up Early</button>
@@ -91,21 +91,29 @@
                             </div>
                         </div>
 
-                        <!-- Step 2: Parent Details and Submission -->
-                        <div id="detailsStep" class="hidden space-y-6">
-                             <div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
-                                    <div>
-                                        <label for="parentFirstName" class="block text-sm font-medium text-gray-700 mb-1">Parent/Guardian's First Name</label>
-                                        <input type="text" id="parentFirstName" name="parentFirstName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., John">
-                                    </div>
-                                    <div>
-                                        <label for="parentLastName" class="block text-sm font-medium text-gray-700 mb-1">Parent/Guardian's Last Name</label>
-                                        <input type="text" id="parentLastName" name="parentLastName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Smith">
-                                    </div>
-                                </div>
+                        <!-- Step 2: Another Student? -->
+                        <div id="anotherStudentStep" class="hidden text-center">
+                            <div id="verifiedStudentsList" class="mb-4 text-left">
+                                <h3 class="font-semibold text-gray-700">Student(s) to process:</h3>
+                                <ul class="list-disc list-inside text-gray-600">
+                                    <!-- Verified students will be listed here -->
+                                </ul>
                             </div>
+                            <p id="anotherStudentQuestion" class="text-gray-700 text-lg mb-6"></p>
+                            <div class="flex justify-center space-x-4">
+                                <button type="button" id="yesAnotherStudentBtn" class="bg-green-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-600">Yes</button>
+                                <button type="button" id="noAnotherStudentBtn" class="bg-red-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-red-600">No</button>
+                            </div>
+                        </div>
 
+                        <!-- Step 3: Reason and Submission -->
+                        <div id="detailsStep" class="hidden space-y-6">
+                             <div id="finalStudentsList" class="mb-4">
+                                <h3 class="font-semibold text-gray-700">Final list of student(s) to process:</h3>
+                                <ul class="list-disc list-inside text-gray-600">
+                                    <!-- Final verified students will be listed here -->
+                                </ul>
+                            </div>
                             <div>
                                 <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
                                 <select id="reason" name="reason" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white">
@@ -113,7 +121,7 @@
                                 </select>
                             </div>
                             
-                            <button type="submit" id="submitBtn" class="w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out">Submit</button>
+                            <button type="submit" id="submitBtn" class="w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out">Submit for All Students</button>
                         </div>
                     </form>
                 </div>
@@ -149,7 +157,6 @@
                          <thead class="bg-gray-100">
                              <tr>
                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent</th>
                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
@@ -193,14 +200,15 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- DOM Elements ---
         const parentView = document.getElementById('parentView');
         const initialScreen = document.getElementById('initialScreen');
         const mainContent = document.getElementById('mainContent');
         const nameEntryStep = document.getElementById('nameEntryStep');
+        const anotherStudentStep = document.getElementById('anotherStudentStep');
         const detailsStep = document.getElementById('detailsStep');
         const startCheckInBtn = document.getElementById('startCheckInBtn');
         const startPickUpBtn = document.getElementById('startPickUpBtn');
@@ -212,13 +220,16 @@
         const studentLastNameInput = document.getElementById('studentLastName');
         const studentSuggestions = document.getElementById('studentSuggestions');
         const studentNameStatus = document.getElementById('studentNameStatus');
-        const parentFirstNameInput = document.getElementById('parentFirstName');
-        const parentLastNameInput = document.getElementById('parentLastName');
         const reasonSelect = document.getElementById('reason');
         const submitBtn = document.getElementById('submitBtn');
         const messageDiv = document.getElementById('message');
         const verifyAndContinueBtn = document.getElementById('verifyAndContinueBtn');
-        
+        const anotherStudentQuestion = document.getElementById('anotherStudentQuestion');
+        const yesAnotherStudentBtn = document.getElementById('yesAnotherStudentBtn');
+        const noAnotherStudentBtn = document.getElementById('noAnotherStudentBtn');
+        const verifiedStudentsList = document.getElementById('verifiedStudentsList').querySelector('ul');
+        const finalStudentsList = document.getElementById('finalStudentsList').querySelector('ul');
+
         // Admin View Elements
         const adminView = document.getElementById('adminView');
         const logoutBtn = document.getElementById('logoutBtn');
@@ -243,6 +254,7 @@
 
 
         // --- State ---
+        let verifiedStudents = [];
         const students = [
             { firstName: "Jerry", lastName: "Aguilar" }, { firstName: "Alekzander", lastName: "Aguirre" }, { firstName: "Carmen", lastName: "Allen" }, { firstName: "Keion", lastName: "Amos Jr" }, { firstName: "Nathaniel Luke", lastName: "Ancero" },
             { firstName: "Zoie", lastName: "Anthony" }, { firstName: "Sophia", lastName: "Aoki" }, { firstName: "Gabriella", lastName: "Arestozo" }, { firstName: "Luca", lastName: "Atkins" }, { firstName: "Addison", lastName: "Austin" },
@@ -344,8 +356,7 @@
             { firstName: "Kael", lastName: "Wilson" }, { firstName: "Liam", lastName: "Wilson" }, { firstName: "Matthew", lastName: "Wilson" }, { firstName: "Alexander", lastName: "Winchell" }, { firstName: "Dean", lastName: "Windham" },
             { firstName: "Rylee", lastName: "Wommack" }, { firstName: "Emery", lastName: "Wong" }, { firstName: "Jody", lastName: "Wright" }, { firstName: "Sylvia", lastName: "Wright" }, { firstName: "Sadie", lastName: "Wygant" },
             { firstName: "Adonis", lastName: "Young" }, { firstName: "Lorelei", lastName: "Young" }, { firstName: "Aniko", lastName: "Young-Tillery" }, { firstName: "Brayden", lastName: "Zackoski" }, { firstName: "Grayson", lastName: "Zeiders" },
-            { firstName: "Gianna", lastName: "Ziara" }, { firstName: "Erik", lastName: "Zimny" }, { firstName: "Natalia", lastName: "Zimny" }, { firstName: "Bryson", lastName: "Zinno" }, { firstName: "Annelise", lastName: "Zoldos" }, { firstName: "Isabella", lastName: "Gard" }, { firstName: "Tristan", lastName: "Deans" },
-            { firstName: "Leidon", lastName: "Lee" }, { firstName: "Ezra", lastName: "Bell-Watson" }
+            { firstName: "Gianna", lastName: "Ziara" }, { firstName: "Erik", lastName: "Zimny" }, { firstName: "Natalia", lastName: "Zimny" }, { firstName: "Bryson", lastName: "Zinno" }, { firstName: "Annelise", lastName: "Zoldos" }
         ];
         let currentActionType = ''; // 'Check In Late' or 'Pick Up Early'
         let isStudentSelected = false;
@@ -353,24 +364,16 @@
         // --- Firebase Setup ---
         let db;
         
-        // --- IMPORTANT ---
-        // PASTE YOUR FIREBASE CONFIG OBJECT HERE
-        // You can get this from your Firebase project settings.
-        const firebaseConfig = {
-  apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
-  authDomain: "windsor-woods-es-student-check.firebaseapp.com",
-  projectId: "windsor-woods-es-student-check",
-  storageBucket: "windsor-woods-es-student-check.firebasestorage.app",
-  messagingSenderId: "347967296020",
-  appId: "1:347967296020:web:dde6b34e166034debacd01"
-};
-        // --- END of Firebase Config ---
-
         async function initializeFirebase() {
             try {
-                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY") {
+                // This will be automatically provided by the hosting environment.
+                const firebaseConfigJSON = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+                const firebaseConfig = JSON.parse(firebaseConfigJSON);
+
+                if (!firebaseConfig.apiKey) {
                     console.error("Firebase config is missing or invalid. Please paste your config object.");
-                    logLoader.innerHTML = '<p class="text-red-500 font-semibold">Error: Firebase not configured. Contact admin.</p>';
+                    logLoader.innerHTML = '<p class="text-red-500 font-semibold">Error: Firebase is not configured correctly.</p>';
+                    // Disable form functionality if firebase is not set up
                     Array.from(document.getElementsByTagName("button")).forEach(button => {
                         if(button.id !== 'startAdminBtn') button.disabled = true;
                     });
@@ -382,7 +385,13 @@
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                await signInAnonymously(auth);
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
                 listenForActivity();
 
             } catch (error) {
@@ -398,16 +407,18 @@
             mainContent.classList.remove('hidden');
             
             nameEntryStep.classList.remove('hidden');
+            anotherStudentStep.classList.add('hidden');
             detailsStep.classList.add('hidden');
             
             portalTitle.textContent = actionType;
             isStudentSelected = false;
+            verifiedStudents = [];
             backButton.textContent = '← Back to selection';
             
             reasonSelect.innerHTML = '';
             const reasons = {
                 'Check In Late': ['Doctor/Dentist appointment', 'Personal', 'Overslept', 'Traffic', 'Running late', 'Bus No-show', 'Appointment'],
-                'Pick Up Early': ['Early Dismissal - Appointment', 'Early Dismissal - Personal', 'Early Dismissal - Clinic Sent Home', 'Early Dismissal - Inclement Weather', 'Early Dismissal - Administrator Sent Home']
+                'Pick Up Early': ['Early Dismissal - Appointment', 'Early Dismissal - Personal', 'Clinic sent home', 'Inclement Weather']
             };
             
             let optionsHtml = `<option value="" disabled selected>Select a reason...</option>`;
@@ -416,7 +427,7 @@
             });
             reasonSelect.innerHTML = optionsHtml;
 
-            submitBtn.textContent = `Submit`;
+            submitBtn.textContent = `Submit for All Students`;
             if (actionType === 'Check In Late') {
                 submitBtn.className = 'w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out bg-blue-600 hover:bg-blue-700 focus:ring-blue-500';
             } else {
@@ -431,22 +442,57 @@
             form.reset();
             studentNameStatus.textContent = '';
             studentSuggestions.classList.add('hidden');
+            verifiedStudents = [];
+        }
+
+        function proceedToAnotherStudentStep() {
+            const studentName = `${studentFirstNameInput.value.trim()} ${studentLastNameInput.value.trim()}`;
+            if(!verifiedStudents.includes(studentName)){
+                verifiedStudents.push(studentName);
+            }
+            
+            nameEntryStep.classList.add('hidden');
+            anotherStudentStep.classList.remove('hidden');
+            backButton.textContent = '← Back to student name';
+            
+            // Update question
+            const actionText = currentActionType === 'Check In Late' ? 'check in' : 'check out';
+            anotherStudentQuestion.textContent = `Do you have another student to ${actionText}?`;
+
+            // Update student list
+            verifiedStudentsList.innerHTML = '';
+            verifiedStudents.forEach(name => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                verifiedStudentsList.appendChild(li);
+            });
         }
 
         function proceedToDetailsStep() {
-            nameEntryStep.classList.add('hidden');
+            anotherStudentStep.classList.add('hidden');
             detailsStep.classList.remove('hidden');
-            parentFirstNameInput.focus();
-            backButton.textContent = '← Back to student name';
+            backButton.textContent = '← Back to student list';
+
+            finalStudentsList.innerHTML = '';
+             verifiedStudents.forEach(name => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                finalStudentsList.appendChild(li);
+            });
         }
 
         function handleBackClick() {
-            if (!detailsStep.classList.contains('hidden')) {
+            if (!detailsStep.classList.contains('hidden')) { // On final step, go to "another student"
                 detailsStep.classList.add('hidden');
+                anotherStudentStep.classList.remove('hidden');
+                backButton.textContent = '← Back to student name';
+            } else if (!anotherStudentStep.classList.contains('hidden')) { // On "another student", go to name entry
+                anotherStudentStep.classList.add('hidden');
                 nameEntryStep.classList.remove('hidden');
                 backButton.textContent = '← Back to selection';
-            } 
-            else {
+                // Remove the last added student to allow re-verification
+                verifiedStudents.pop(); 
+            } else { // On name entry, go to initial screen
                 showInitialScreen();
             }
         }
@@ -464,6 +510,10 @@
             }
 
             const matches = students.filter(student => {
+                const fullName = `${student.firstName.toLowerCase()} ${student.lastName.toLowerCase()}`;
+                if(verifiedStudents.includes(`${student.firstName} ${student.lastName}`)){
+                    return false; // Exclude already verified students
+                }
                 const fNameMatch = student.firstName.toLowerCase().includes(inputFirstName);
                 const lNameMatch = student.lastName.toLowerCase().includes(inputLastName);
                 return fNameMatch && lNameMatch;
@@ -475,7 +525,7 @@
                 studentLastNameInput.value = student.lastName;
                 isStudentSelected = true;
                 studentSuggestions.classList.add('hidden');
-                proceedToDetailsStep();
+                proceedToAnotherStudentStep();
             } else if (matches.length > 0) {
                 studentNameStatus.textContent = 'Please select a student from the list below.';
                 studentNameStatus.className = 'text-xs text-blue-600 mt-2 h-4';
@@ -503,7 +553,7 @@
                     studentSuggestions.innerHTML = '';
                     studentSuggestions.classList.add('hidden');
                     isStudentSelected = true;
-                    proceedToDetailsStep();
+                    proceedToAnotherStudentStep();
                 });
                 studentSuggestions.appendChild(suggestionDiv);
             });
@@ -514,44 +564,42 @@
         // --- Form Submission ---
         async function handleFormSubmit(event) {
             event.preventDefault();
-            const parentFirstName = parentFirstNameInput.value.trim();
-            const parentLastName = parentLastNameInput.value.trim();
-            const parentFullName = `${parentFirstName} ${parentLastName}`.trim();
             const reason = reasonSelect.value;
-            const studentFirstName = studentFirstNameInput.value.trim();
-            const studentLastName = studentLastNameInput.value.trim();
-            const studentFullName = `${studentFirstName} ${studentLastName}`;
-
-            let errors = [];
-            if (!isStudentSelected) {
-                 errors.push('Student name was not verified.');
+            
+            if (verifiedStudents.length === 0) {
+                 showMessage('No students have been verified.', 'error');
+                 return;
             }
-            if (!parentFirstName) errors.push("Parent/Guardian's First Name is required.");
-            if (!parentLastName) errors.push("Parent/Guardian's Last Name is required.");
-            if (!reason) errors.push('Please select a reason.');
-
-            if (errors.length > 0) {
-                showMessage(errors.join('<br>'), 'error');
+            if (!reason) {
+                showMessage('Please select a reason.', 'error');
                 return;
             }
             
-            const collectionPath = `wwes_checkins`;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+            const collectionPath = `artifacts/${appId}/public/data/checkins`;
 
-            const checkinData = {
-                studentName: studentFullName,
-                parentName: parentFullName,
-                reason: reason,
-                type: currentActionType,
-                timestamp: serverTimestamp()
-            };
+            const batch = writeBatch(db);
+
+            verifiedStudents.forEach(studentName => {
+                const checkinData = {
+                    studentName: studentName,
+                    parentName: 'N/A', // Parent name removed
+                    reason: reason,
+                    type: currentActionType,
+                    timestamp: serverTimestamp()
+                };
+                const docRef = doc(collection(db, collectionPath));
+                batch.set(docRef, checkinData);
+            });
 
             try {
-                await addDoc(collection(db, collectionPath), checkinData);
-                showMessage(`Successfully processed ${currentActionType} for ${studentFullName}.`, 'success');
+                await batch.commit();
+                const studentCount = verifiedStudents.length;
+                showMessage(`Successfully processed ${currentActionType} for ${studentCount} student(s).`, 'success');
                 setTimeout(showInitialScreen, 2500);
             } catch (error) {
-                console.error("Error writing document: ", error);
-                showMessage(`Could not save the record. Please try again.`, 'error');
+                console.error("Error writing batch document: ", error);
+                showMessage(`Could not save the record(s). Please try again.`, 'error');
             }
         }
         
@@ -583,7 +631,8 @@
             confirmReset.textContent = 'Resetting...';
             
             try {
-                const collectionPath = `wwes_checkins`;
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+                const collectionPath = `artifacts/${appId}/public/data/checkins`;
                 const collectionRef = collection(db, collectionPath);
                 const querySnapshot = await getDocs(collectionRef);
                 
@@ -607,7 +656,8 @@
         }
 
         function listenForActivity() {
-             const collectionPath = `wwes_checkins`;
+             const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+             const collectionPath = `artifacts/${appId}/public/data/checkins`;
              const q = query(collection(db, collectionPath), orderBy("timestamp", "desc"), limit(50));
             onSnapshot(q, (snapshot) => {
                 logLoader.classList.add('hidden');
@@ -628,7 +678,6 @@
                         const statusClass = data.type === 'Check In Late' ? 'text-blue-600' : 'text-yellow-600';
                         tr.innerHTML = `
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.studentName}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.parentName}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold ${statusClass}">${data.type}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.reason || 'N/A'}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${date}</td>
@@ -724,6 +773,16 @@
         form.addEventListener('submit', handleFormSubmit);
         verifyAndContinueBtn.addEventListener('click', findStudentMatches);
         
+        yesAnotherStudentBtn.addEventListener('click', () => {
+            anotherStudentStep.classList.add('hidden');
+            nameEntryStep.classList.remove('hidden');
+            studentFirstNameInput.value = '';
+            studentLastNameInput.value = '';
+            studentFirstNameInput.focus();
+        });
+
+        noAnotherStudentBtn.addEventListener('click', proceedToDetailsStep);
+
         logoutBtn.addEventListener('click', handleLogout);
         printReportBtn.addEventListener('click', generatePDFReport);
         resetReportBtn.addEventListener('click', () => resetModal.classList.remove('hidden'));
@@ -761,9 +820,4 @@
     </script>
 </body>
 </html>
-
-
-
-
-
 
