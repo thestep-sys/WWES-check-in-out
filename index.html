@@ -364,33 +364,32 @@
         // --- Firebase Setup ---
         let db;
         
-       // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+        async function initializeFirebase() {
+            try {
+                // This will be automatically provided by the hosting environment.
+                const firebaseConfigJSON = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+               // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
-  authDomain: "windsor-woods-es-student-check.firebaseapp.com",
-  projectId: "windsor-woods-es-student-check",
-  storageBucket: "windsor-woods-es-student-check.firebasestorage.app",
-  messagingSenderId: "347967296020",
-  appId: "1:347967296020:web:dde6b34e166034debacd01"
-};
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
-  authDomain: "windsor-woods-es-student-check.firebaseapp.com",
-  projectId: "windsor-woods-es-student-check",
-  storageBucket: "windsor-woods-es-student-check.firebasestorage.app",
-  messagingSenderId: "347967296020",
-  appId: "1:347967296020:web:dde6b34e166034debacd01"
+  apiKey: "AIzaSyDBZbSIIIPXuVjVD6sm1edI7cJY9ereSsY",
+  authDomain: "wwes-check-in-out.firebaseapp.com",
+  projectId: "wwes-check-in-out",
+  storageBucket: "wwes-check-in-out.firebasestorage.app",
+  messagingSenderId: "640513341079",
+  appId: "1:640513341079:web:76622dd48430a258a8dbd2",
+  measurementId: "G-FF5R386S7N"
 };
                 
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                await signInAnonymously(auth);
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
                 listenForActivity();
 
             } catch (error) {
@@ -574,7 +573,8 @@ const firebaseConfig = {
                 return;
             }
             
-            const collectionPath = `wwes_checkins`;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+            const collectionPath = `artifacts/${appId}/public/data/checkins`;
 
             const batch = writeBatch(db);
 
@@ -629,7 +629,8 @@ const firebaseConfig = {
             confirmReset.textContent = 'Resetting...';
             
             try {
-                const collectionPath = `wwes_checkins`;
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+                const collectionPath = `artifacts/${appId}/public/data/checkins`;
                 const collectionRef = collection(db, collectionPath);
                 const querySnapshot = await getDocs(collectionRef);
                 
@@ -653,7 +654,8 @@ const firebaseConfig = {
         }
 
         function listenForActivity() {
-             const collectionPath = `wwes_checkins`;
+             const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+             const collectionPath = `artifacts/${appId}/public/data/checkins`;
              const q = query(collection(db, collectionPath), orderBy("timestamp", "desc"), limit(50));
             onSnapshot(q, (snapshot) => {
                 logLoader.classList.add('hidden');
@@ -816,6 +818,4 @@ const firebaseConfig = {
     </script>
 </body>
 </html>
-
-
 
