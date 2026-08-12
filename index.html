@@ -1162,25 +1162,47 @@
                 return;
             }
             const reportContainer = document.createElement('div');
-            reportContainer.style.padding = '1in';
+            // Keep the report close to the printable landscape width so html2pdf
+            // does not clip the right-most columns.
+            reportContainer.style.padding = '0';
+            reportContainer.style.margin = '0';
+            reportContainer.style.width = '10.5in';
+            reportContainer.style.boxSizing = 'border-box';
             const title = document.createElement('h1');
             const today = new Date();
             title.innerText = `Windsor Woods ES Activity Report - ${today.toLocaleDateString()}`;
             title.style.textAlign = 'center';
-            title.style.marginBottom = '20px';
-            title.style.fontSize = '24px';
+            title.style.marginBottom = '10px';
+            title.style.fontSize = '18px';
             title.style.fontFamily = 'Inter, sans-serif';
             
             const tableClone = logTable.cloneNode(true);
             tableClone.style.width = '100%';
+            tableClone.style.maxWidth = '100%';
+            tableClone.style.tableLayout = 'fixed';
             tableClone.style.borderCollapse = 'collapse';
             tableClone.style.fontFamily = 'Inter, sans-serif';
-            tableClone.style.fontSize = '10pt';
+            tableClone.style.fontSize = '7.5pt';
 
+            // Remove the dashboard's nowrap behavior in the PDF. Wrapping longer
+            // names/reasons keeps every column inside a landscape Letter page.
             Array.from(tableClone.querySelectorAll('th, td')).forEach(cell => {
+                cell.classList.remove('whitespace-nowrap');
                 cell.style.border = '1px solid #cccccc';
-                cell.style.padding = '8px';
+                cell.style.padding = '4px';
                 cell.style.textAlign = 'left';
+                cell.style.whiteSpace = 'normal';
+                cell.style.overflowWrap = 'anywhere';
+                cell.style.wordBreak = 'break-word';
+                cell.style.lineHeight = '1.15';
+            });
+
+            // Give the columns practical proportions while keeping the total at 100%.
+            const columnWidths = ['15%', '14%', '6%', '13%', '12%', '20%', '10%', '10%'];
+            Array.from(tableClone.querySelectorAll('tr')).forEach(row => {
+                Array.from(row.children).forEach((cell, index) => {
+                    if (columnWidths[index]) cell.style.width = columnWidths[index];
+                });
             });
             Array.from(tableClone.querySelectorAll('th')).forEach(th => {
                 th.style.backgroundColor = '#f4f4f4';
@@ -1196,11 +1218,12 @@
 
             const dateString = today.toISOString().split('T')[0];
             const options = {
-                margin:       0.5,
+                margin:       [0.2, 0.2, 0.2, 0.2],
                 filename:     `WWES_Activity_Report_${dateString}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+                html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' },
+                pagebreak:    { mode: ['css', 'legacy'], avoid: ['tr'] }
             };
 
             html2pdf().set(options).from(reportContainer).save();
