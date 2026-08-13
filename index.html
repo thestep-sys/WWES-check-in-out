@@ -141,13 +141,15 @@
                     <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
                     <button id="logoutBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Logout</button>
                 </div>
-                 <div class="flex justify-between items-center mb-4">
+                 <div id="dailyToolbar" class="flex justify-between items-center mb-4">
                      <h2 class="text-xl font-semibold text-gray-700">Recent Activity</h2>
-                     <div class="flex space-x-2">
+                     <div class="flex flex-wrap justify-end gap-2">
+                        <button id="historyReportBtn" class="bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">School Year History</button>
                         <button id="printReportBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Download PDF</button>
-                        <button id="resetReportBtn" class="bg-orange-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400">Reset Report</button>
+                        <button id="resetReportBtn" class="bg-orange-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400">Reset Daily Report</button>
                      </div>
                  </div>
+                 <div id="dailyAdminPanel">
                  <div id="logLoader" class="flex justify-center items-center mt-6">
                     <div class="loader"></div>
                     <p class="ml-4 text-gray-600">Loading activity log...</p>
@@ -172,6 +174,75 @@
                      </table>
                      <p id="noActivity" class="text-center text-gray-500 mt-4 hidden">No activity recorded yet.</p>
                  </div>
+                 </div>
+
+                 <!-- School Year History -->
+                 <div id="historyAdminPanel" class="hidden">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">2026–2027 School Year History</h2>
+                            <p class="text-sm text-gray-500">August 1, 2026 through June 30, 2027. Daily resets do not erase this history.</p>
+                        </div>
+                        <button id="backToDailyBtn" class="self-start bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700">← Back to Daily Report</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                        <div>
+                            <label for="historySearch" class="block text-sm font-medium text-gray-700 mb-1">Search student</label>
+                            <input id="historySearch" type="search" placeholder="First name, last name, or full name" autocomplete="off" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label for="historyTypeFilter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="historyTypeFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:ring-purple-500 focus:border-purple-500">
+                                <option value="">All activity</option>
+                                <option value="Check In Late">Check In Late</option>
+                                <option value="Pick Up Early">Pick Up Early</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <button id="downloadHistorySearchPdfBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700">Download Search PDF</button>
+                            <button id="clearHistorySearchBtn" class="w-full bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300">Clear Search</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                            <div class="text-xs uppercase tracking-wide text-gray-500">Total Events</div>
+                            <div id="historyTotalCount" class="text-3xl font-bold text-gray-800">0</div>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                            <div class="text-xs uppercase tracking-wide text-blue-700">Late Check-ins</div>
+                            <div id="historyLateCount" class="text-3xl font-bold text-blue-700">0</div>
+                        </div>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                            <div class="text-xs uppercase tracking-wide text-yellow-700">Early Pickups</div>
+                            <div id="historyEarlyCount" class="text-3xl font-bold text-yellow-700">0</div>
+                        </div>
+                    </div>
+
+                    <div id="historyLoader" class="flex justify-center items-center py-6 hidden">
+                        <div class="loader"></div>
+                        <p class="ml-4 text-gray-600">Loading school-year history...</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="historyLog" class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room #</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200"></tbody>
+                        </table>
+                        <p id="noHistoryActivity" class="text-center text-gray-500 mt-4 hidden">No matching school-year activity found.</p>
+                    </div>
+                 </div>
              </div>
         </div>
     </div>
@@ -193,10 +264,10 @@
     <div id="resetModal" class="modal-overlay hidden">
         <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm text-center">
             <h3 class="text-lg font-bold text-gray-800 mb-2">Are you sure?</h3>
-            <p class="text-gray-600 mb-6">This will permanently delete all activity log entries. This action cannot be undone.</p>
+            <p class="text-gray-600 mb-6">This will clear the current daily activity report only. The 2026–2027 School Year History will be preserved.</p>
             <div class="flex justify-between mt-4 space-x-2">
                 <button id="cancelReset" class="w-1/2 bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400">Cancel</button>
-                <button id="confirmReset" class="w-1/2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Yes, Reset It</button>
+                <button id="confirmReset" class="w-1/2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Yes, Reset Daily Report</button>
             </div>
         </div>
     </div>
@@ -242,6 +313,23 @@
         const activityLogBody = activityLogTable.querySelector('tbody');
         const noActivityPara = document.getElementById('noActivity');
         const resetReportBtn = document.getElementById('resetReportBtn');
+        const historyReportBtn = document.getElementById('historyReportBtn');
+        const dailyToolbar = document.getElementById('dailyToolbar');
+        const dailyAdminPanel = document.getElementById('dailyAdminPanel');
+        const historyAdminPanel = document.getElementById('historyAdminPanel');
+        const backToDailyBtn = document.getElementById('backToDailyBtn');
+        const historySearch = document.getElementById('historySearch');
+        const historyTypeFilter = document.getElementById('historyTypeFilter');
+        const downloadHistorySearchPdfBtn = document.getElementById('downloadHistorySearchPdfBtn');
+        const clearHistorySearchBtn = document.getElementById('clearHistorySearchBtn');
+        const historyLoader = document.getElementById('historyLoader');
+        const historyLogTable = document.getElementById('historyLog');
+        const historyLogBody = historyLogTable.querySelector('tbody');
+        const noHistoryActivity = document.getElementById('noHistoryActivity');
+        const historyTotalCount = document.getElementById('historyTotalCount');
+        const historyLateCount = document.getElementById('historyLateCount');
+        const historyEarlyCount = document.getElementById('historyEarlyCount');
+        let schoolYearHistory = [];
         
         // PIN Modal Elements
         const pinModal = document.getElementById('pinModal');
@@ -1024,6 +1112,7 @@
             
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
             const collectionPath = `artifacts/${appId}/public/data/checkins`;
+            const historyCollectionPath = `artifacts/${appId}/public/data/schoolYearHistory`;
 
             const batch = writeBatch(db);
 
@@ -1039,8 +1128,12 @@
                     type: currentActionType,
                     timestamp: serverTimestamp()
                 };
+                // Use the same document ID in both collections. The daily collection
+                // can be reset while the school-year history remains intact.
                 const docRef = doc(collection(db, collectionPath));
+                const historyDocRef = doc(db, historyCollectionPath, docRef.id);
                 batch.set(docRef, checkinData);
+                batch.set(historyDocRef, checkinData);
             });
 
             try {
@@ -1061,6 +1154,7 @@
         }
 
         function handleLogout() {
+            showDailyAdminReport();
             adminView.classList.add('hidden');
             parentView.classList.remove('hidden');
             showInitialScreen();
@@ -1094,7 +1188,7 @@
 
                 await Promise.all(deletePromises);
                 
-                showMessage('Activity log has been successfully cleared.', 'success');
+                showMessage('Daily activity report has been cleared. School-year history was preserved.', 'success');
 
             } catch (error) {
                 console.error("Error resetting report: ", error);
@@ -1102,7 +1196,7 @@
             } finally {
                 resetModal.classList.add('hidden');
                 confirmReset.disabled = false;
-                confirmReset.textContent = 'Yes, Reset It';
+                confirmReset.textContent = 'Yes, Reset Daily Report';
             }
         }
 
@@ -1150,6 +1244,120 @@
                 noActivityPara.textContent = 'Could not load activity log. Error: ' + error.message;
                 noActivityPara.classList.remove('hidden');
             });
+        }
+
+        // --- School Year History ---
+        function isWithinSchoolYear(jsDate) {
+            if (!jsDate) return false;
+            const start = new Date(2026, 7, 1, 0, 0, 0, 0);   // Aug 1, 2026
+            const end = new Date(2027, 5, 30, 23, 59, 59, 999); // Jun 30, 2027
+            return jsDate >= start && jsDate <= end;
+        }
+
+        async function backfillCurrentDailyRecordsToHistory() {
+            // This safely preserves any records still on today's dashboard when this
+            // version is first deployed. New records are written to both collections.
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+            const dailyPath = `artifacts/${appId}/public/data/checkins`;
+            const historyPath = `artifacts/${appId}/public/data/schoolYearHistory`;
+            const dailySnapshot = await getDocs(collection(db, dailyPath));
+            if (dailySnapshot.empty) return;
+
+            const batch = writeBatch(db);
+            dailySnapshot.forEach((dailyDoc) => {
+                batch.set(doc(db, historyPath, dailyDoc.id), dailyDoc.data());
+            });
+            await batch.commit();
+        }
+
+        async function loadSchoolYearHistory() {
+            historyLoader.classList.remove('hidden');
+            noHistoryActivity.classList.add('hidden');
+            historyLogTable.classList.add('hidden');
+            try {
+                await backfillCurrentDailyRecordsToHistory();
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+                const historyPath = `artifacts/${appId}/public/data/schoolYearHistory`;
+                const historySnapshot = await getDocs(query(collection(db, historyPath), orderBy('timestamp', 'desc')));
+                schoolYearHistory = historySnapshot.docs.map(historyDoc => {
+                    const data = historyDoc.data();
+                    const jsDate = data.timestamp ? data.timestamp.toDate() : null;
+                    return { ...data, jsDate };
+                }).filter(item => isWithinSchoolYear(item.jsDate));
+                renderSchoolYearHistory();
+            } catch (error) {
+                console.error('Error loading school-year history:', error);
+                noHistoryActivity.textContent = 'Could not load school-year history. Error: ' + error.message;
+                noHistoryActivity.classList.remove('hidden');
+            } finally {
+                historyLoader.classList.add('hidden');
+            }
+        }
+
+        function renderSchoolYearHistory() {
+            const searchText = historySearch.value.trim().toLowerCase();
+            const typeFilter = historyTypeFilter.value;
+
+            const nameMatches = schoolYearHistory.filter(item => {
+                const name = (item.studentName || '').toLowerCase();
+                return !searchText || name.includes(searchText);
+            });
+
+            // Counts intentionally follow the student-name search, but not the status
+            // filter, so a student search always shows both late and early totals.
+            historyTotalCount.textContent = nameMatches.length;
+            historyLateCount.textContent = nameMatches.filter(item => item.type === 'Check In Late').length;
+            historyEarlyCount.textContent = nameMatches.filter(item => item.type === 'Pick Up Early').length;
+
+            const displayed = nameMatches.filter(item => !typeFilter || item.type === typeFilter);
+            historyLogBody.innerHTML = '';
+
+            if (displayed.length === 0) {
+                historyLogTable.classList.add('hidden');
+                noHistoryActivity.textContent = searchText || typeFilter
+                    ? 'No matching school-year activity found.'
+                    : 'No school-year activity has been recorded yet.';
+                noHistoryActivity.classList.remove('hidden');
+                return;
+            }
+
+            historyLogTable.classList.remove('hidden');
+            noHistoryActivity.classList.add('hidden');
+            displayed.forEach(data => {
+                const tr = document.createElement('tr');
+                const date = data.jsDate ? data.jsDate.toLocaleDateString() : 'N/A';
+                const time = data.jsDate ? data.jsDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+                const statusClass = data.type === 'Check In Late' ? 'text-blue-600' : 'text-yellow-600';
+                const location = data.scheduleLocation || getStudentLocation({
+                    teacherName: data.teacherName,
+                    grade: data.grade
+                }, data.jsDate || new Date());
+                tr.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${data.studentName || 'N/A'}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">${data.teacherName || 'N/A'}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">${data.roomNumber || 'N/A'}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-semibold text-gray-700">${location}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-semibold ${statusClass}">${data.type || 'N/A'}</td>
+                    <td class="px-4 py-3 text-sm text-gray-500">${data.reason || 'N/A'}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">${date}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">${time}</td>
+                `;
+                historyLogBody.appendChild(tr);
+            });
+        }
+
+        async function showSchoolYearHistory() {
+            dailyAdminPanel.classList.add('hidden');
+            historyAdminPanel.classList.remove('hidden');
+            dailyToolbar.classList.add('hidden');
+            await loadSchoolYearHistory();
+            historySearch.focus();
+        }
+
+        function showDailyAdminReport() {
+            historyAdminPanel.classList.add('hidden');
+            dailyAdminPanel.classList.remove('hidden');
+            dailyToolbar.classList.remove('hidden');
         }
 
         // --- PDF Generation ---
@@ -1229,6 +1437,103 @@
             html2pdf().set(options).from(reportContainer).save();
         }
 
+        function generateHistorySearchPDF() {
+            const rows = Array.from(historyLogBody.querySelectorAll('tr'));
+            if (rows.length === 0 || historyLogTable.classList.contains('hidden')) {
+                alert('No matching school-year history to download.');
+                return;
+            }
+
+            const searchText = historySearch.value.trim();
+            const typeFilter = historyTypeFilter.value;
+            const reportContainer = document.createElement('div');
+            reportContainer.style.padding = '0';
+            reportContainer.style.margin = '0';
+            reportContainer.style.width = '10.5in';
+            reportContainer.style.boxSizing = 'border-box';
+            reportContainer.style.fontFamily = 'Inter, sans-serif';
+
+            const title = document.createElement('h1');
+            title.innerText = 'Windsor Woods ES - 2026–2027 School Year History';
+            title.style.textAlign = 'center';
+            title.style.margin = '0 0 4px 0';
+            title.style.fontSize = '18px';
+
+            const subtitle = document.createElement('div');
+            const filterParts = [];
+            if (searchText) filterParts.push(`Student search: ${searchText}`);
+            if (typeFilter) filterParts.push(`Status: ${typeFilter}`);
+            if (!filterParts.length) filterParts.push('All school-year records');
+            subtitle.innerText = filterParts.join(' | ');
+            subtitle.style.textAlign = 'center';
+            subtitle.style.fontSize = '10pt';
+            subtitle.style.marginBottom = '4px';
+
+            const totals = document.createElement('div');
+            totals.innerText = `Total Events: ${historyTotalCount.textContent}   |   Late Check-ins: ${historyLateCount.textContent}   |   Early Pickups: ${historyEarlyCount.textContent}   |   Rows in this PDF: ${rows.length}`;
+            totals.style.textAlign = 'center';
+            totals.style.fontSize = '9pt';
+            totals.style.marginBottom = '10px';
+
+            const tableClone = historyLogTable.cloneNode(true);
+            tableClone.classList.remove('hidden');
+            tableClone.style.width = '100%';
+            tableClone.style.maxWidth = '100%';
+            tableClone.style.tableLayout = 'fixed';
+            tableClone.style.borderCollapse = 'collapse';
+            tableClone.style.fontFamily = 'Inter, sans-serif';
+            tableClone.style.fontSize = '7.5pt';
+
+            Array.from(tableClone.querySelectorAll('th, td')).forEach(cell => {
+                cell.classList.remove('whitespace-nowrap');
+                cell.style.border = '1px solid #cccccc';
+                cell.style.padding = '4px';
+                cell.style.textAlign = 'left';
+                cell.style.whiteSpace = 'normal';
+                cell.style.overflowWrap = 'anywhere';
+                cell.style.wordBreak = 'break-word';
+                cell.style.lineHeight = '1.15';
+            });
+
+            const columnWidths = ['15%', '14%', '6%', '13%', '12%', '20%', '10%', '10%'];
+            Array.from(tableClone.querySelectorAll('tr')).forEach(row => {
+                Array.from(row.children).forEach((cell, index) => {
+                    if (columnWidths[index]) cell.style.width = columnWidths[index];
+                });
+            });
+            Array.from(tableClone.querySelectorAll('th')).forEach(th => {
+                th.style.backgroundColor = '#f4f4f4';
+                th.style.fontWeight = 'bold';
+            });
+            Array.from(tableClone.querySelectorAll('.text-blue-600, .text-yellow-600')).forEach(el => {
+                el.classList.remove('text-blue-600', 'text-yellow-600');
+                el.style.color = '#000000';
+            });
+
+            reportContainer.appendChild(title);
+            reportContainer.appendChild(subtitle);
+            reportContainer.appendChild(totals);
+            reportContainer.appendChild(tableClone);
+
+            const today = new Date();
+            const dateString = today.toISOString().split('T')[0];
+            const safeSearch = searchText
+                ? '_' + searchText.replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '').slice(0, 40)
+                : '';
+            const safeType = typeFilter === 'Check In Late' ? '_Late' : typeFilter === 'Pick Up Early' ? '_Early' : '';
+
+            const options = {
+                margin:       [0.2, 0.2, 0.2, 0.2],
+                filename:     `WWES_School_Year_History${safeSearch}${safeType}_${dateString}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' },
+                pagebreak:    { mode: ['css', 'legacy'], avoid: ['tr'] }
+            };
+
+            html2pdf().set(options).from(reportContainer).save();
+        }
+
         // --- UI Helper ---
         function showMessage(msg, type = 'info') {
             const classes = {
@@ -1268,6 +1573,17 @@
         logoutBtn.addEventListener('click', handleLogout);
         printReportBtn.addEventListener('click', generatePDFReport);
         resetReportBtn.addEventListener('click', () => resetModal.classList.remove('hidden'));
+        historyReportBtn.addEventListener('click', showSchoolYearHistory);
+        backToDailyBtn.addEventListener('click', showDailyAdminReport);
+        historySearch.addEventListener('input', renderSchoolYearHistory);
+        historyTypeFilter.addEventListener('change', renderSchoolYearHistory);
+        downloadHistorySearchPdfBtn.addEventListener('click', generateHistorySearchPDF);
+        clearHistorySearchBtn.addEventListener('click', () => {
+            historySearch.value = '';
+            historyTypeFilter.value = '';
+            renderSchoolYearHistory();
+            historySearch.focus();
+        });
 
         function resetVerificationStatus() {
             if (isStudentSelected) {
