@@ -186,10 +186,15 @@
                         <button id="backToDailyBtn" class="self-start bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700">← Back to Daily Report</button>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
                         <div>
                             <label for="historySearch" class="block text-sm font-medium text-gray-700 mb-1">Search student</label>
                             <input id="historySearch" type="search" placeholder="First name, last name, or full name" autocomplete="off" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label for="historyDateFilter" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                            <input id="historyDateFilter" type="date" min="2026-08-01" max="2027-06-30" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:ring-purple-500 focus:border-purple-500">
+                            <p class="text-xs text-gray-500 mt-1">Choose any date from Aug. 1, 2026–June 30, 2027.</p>
                         </div>
                         <div>
                             <label for="historyTypeFilter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -319,6 +324,7 @@
         const historyAdminPanel = document.getElementById('historyAdminPanel');
         const backToDailyBtn = document.getElementById('backToDailyBtn');
         const historySearch = document.getElementById('historySearch');
+        const historyDateFilter = document.getElementById('historyDateFilter');
         const historyTypeFilter = document.getElementById('historyTypeFilter');
         const downloadHistorySearchPdfBtn = document.getElementById('downloadHistorySearchPdfBtn');
         const clearHistorySearchBtn = document.getElementById('clearHistorySearchBtn');
@@ -1294,27 +1300,39 @@
             }
         }
 
+        function getLocalDateKey(date) {
+            if (!date) return '';
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         function renderSchoolYearHistory() {
             const searchText = historySearch.value.trim().toLowerCase();
+            const dateFilter = historyDateFilter.value;
             const typeFilter = historyTypeFilter.value;
 
-            const nameMatches = schoolYearHistory.filter(item => {
+            const baseMatches = schoolYearHistory.filter(item => {
                 const name = (item.studentName || '').toLowerCase();
-                return !searchText || name.includes(searchText);
+                const nameMatches = !searchText || name.includes(searchText);
+                const dateMatches = !dateFilter || getLocalDateKey(item.jsDate) === dateFilter;
+                return nameMatches && dateMatches;
             });
 
-            // Counts intentionally follow the student-name search, but not the status
-            // filter, so a student search always shows both late and early totals.
-            historyTotalCount.textContent = nameMatches.length;
-            historyLateCount.textContent = nameMatches.filter(item => item.type === 'Check In Late').length;
-            historyEarlyCount.textContent = nameMatches.filter(item => item.type === 'Pick Up Early').length;
+            // Counts follow the student-name and date search, but not the status
+            // filter, so the summary always shows both late and early totals for
+            // the selected student/date combination.
+            historyTotalCount.textContent = baseMatches.length;
+            historyLateCount.textContent = baseMatches.filter(item => item.type === 'Check In Late').length;
+            historyEarlyCount.textContent = baseMatches.filter(item => item.type === 'Pick Up Early').length;
 
-            const displayed = nameMatches.filter(item => !typeFilter || item.type === typeFilter);
+            const displayed = baseMatches.filter(item => !typeFilter || item.type === typeFilter);
             historyLogBody.innerHTML = '';
 
             if (displayed.length === 0) {
                 historyLogTable.classList.add('hidden');
-                noHistoryActivity.textContent = searchText || typeFilter
+                noHistoryActivity.textContent = searchText || dateFilter || typeFilter
                     ? 'No matching school-year activity found.'
                     : 'No school-year activity has been recorded yet.';
                 noHistoryActivity.classList.remove('hidden');
@@ -1445,6 +1463,7 @@
             }
 
             const searchText = historySearch.value.trim();
+            const dateFilter = historyDateFilter.value;
             const typeFilter = historyTypeFilter.value;
             const reportContainer = document.createElement('div');
             reportContainer.style.padding = '0';
@@ -1462,6 +1481,10 @@
             const subtitle = document.createElement('div');
             const filterParts = [];
             if (searchText) filterParts.push(`Student search: ${searchText}`);
+            if (dateFilter) {
+                const [year, month, day] = dateFilter.split('-');
+                filterParts.push(`Date: ${month}/${day}/${year}`);
+            }
             if (typeFilter) filterParts.push(`Status: ${typeFilter}`);
             if (!filterParts.length) filterParts.push('All school-year records');
             subtitle.innerText = filterParts.join(' | ');
@@ -1520,11 +1543,12 @@
             const safeSearch = searchText
                 ? '_' + searchText.replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '').slice(0, 40)
                 : '';
+            const safeDateFilter = dateFilter ? '_' + dateFilter : '';
             const safeType = typeFilter === 'Check In Late' ? '_Late' : typeFilter === 'Pick Up Early' ? '_Early' : '';
 
             const options = {
                 margin:       [0.2, 0.2, 0.2, 0.2],
-                filename:     `WWES_School_Year_History${safeSearch}${safeType}_${dateString}.pdf`,
+                filename:     `WWES_School_Year_History${safeSearch}${safeDateFilter}${safeType}_${dateString}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0 },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' },
@@ -1576,10 +1600,12 @@
         historyReportBtn.addEventListener('click', showSchoolYearHistory);
         backToDailyBtn.addEventListener('click', showDailyAdminReport);
         historySearch.addEventListener('input', renderSchoolYearHistory);
+        historyDateFilter.addEventListener('change', renderSchoolYearHistory);
         historyTypeFilter.addEventListener('change', renderSchoolYearHistory);
         downloadHistorySearchPdfBtn.addEventListener('click', generateHistorySearchPDF);
         clearHistorySearchBtn.addEventListener('click', () => {
             historySearch.value = '';
+            historyDateFilter.value = '';
             historyTypeFilter.value = '';
             renderSchoolYearHistory();
             historySearch.focus();
