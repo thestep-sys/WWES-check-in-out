@@ -146,6 +146,7 @@
                      <div class="flex flex-wrap justify-end gap-2">
                         <button id="historyReportBtn" class="bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">School Year History</button>
                         <button id="printReportBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Download PDF</button>
+                        <button id="deleteDailySelectedBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 disabled:opacity-50" disabled>Delete Selected</button>
                         <button id="resetReportBtn" class="bg-orange-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400">Reset Daily Report</button>
                      </div>
                  </div>
@@ -158,6 +159,9 @@
                      <table id="activityLog" class="min-w-full divide-y divide-gray-200">
                          <thead class="bg-gray-100">
                              <tr>
+                                 <th scope="col" class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                     <input id="selectAllDaily" type="checkbox" class="h-4 w-4" aria-label="Select all daily records">
+                                 </th>
                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room #</th>
@@ -209,6 +213,10 @@
                             <button id="clearHistorySearchBtn" class="w-full bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300">Clear Search</button>
                         </div>
                     </div>
+                    <div class="flex flex-wrap justify-end gap-2 mb-4">
+                        <button id="deleteHistorySelectedBtn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 disabled:opacity-50" disabled>Delete Selected</button>
+                        <button id="deleteHistoryAllBtn" class="bg-red-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-900">Delete All Shown</button>
+                    </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
@@ -233,6 +241,9 @@
                         <table id="historyLog" class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-100">
                                 <tr>
+                                    <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <input id="selectAllHistory" type="checkbox" class="h-4 w-4" aria-label="Select all shown history records">
+                                    </th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room #</th>
@@ -273,6 +284,21 @@
             <div class="flex justify-between mt-4 space-x-2">
                 <button id="cancelReset" class="w-1/2 bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400">Cancel</button>
                 <button id="confirmReset" class="w-1/2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Yes, Reset Daily Report</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Delete PIN Modal -->
+    <div id="deletePinModal" class="modal-overlay hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+            <h3 class="text-lg font-bold text-center mb-2">Confirm Record Deletion</h3>
+            <p id="deletePinDescription" class="text-sm text-gray-600 text-center mb-4"></p>
+            <p id="deletePinError" class="text-red-500 text-sm text-center mb-2 h-4"></p>
+            <input type="password" id="deletePinInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center tracking-widest text-xl" maxlength="4" pattern="\d*" placeholder="PIN">
+            <div class="flex justify-between mt-4 space-x-2">
+                <button id="cancelDeletePin" class="w-1/2 bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400">Cancel</button>
+                <button id="confirmDeletePin" class="w-1/2 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700">Delete</button>
             </div>
         </div>
     </div>
@@ -318,6 +344,8 @@
         const activityLogBody = activityLogTable.querySelector('tbody');
         const noActivityPara = document.getElementById('noActivity');
         const resetReportBtn = document.getElementById('resetReportBtn');
+        const selectAllDaily = document.getElementById('selectAllDaily');
+        const deleteDailySelectedBtn = document.getElementById('deleteDailySelectedBtn');
         const historyReportBtn = document.getElementById('historyReportBtn');
         const dailyToolbar = document.getElementById('dailyToolbar');
         const dailyAdminPanel = document.getElementById('dailyAdminPanel');
@@ -328,6 +356,15 @@
         const historyTypeFilter = document.getElementById('historyTypeFilter');
         const downloadHistorySearchPdfBtn = document.getElementById('downloadHistorySearchPdfBtn');
         const clearHistorySearchBtn = document.getElementById('clearHistorySearchBtn');
+        const selectAllHistory = document.getElementById('selectAllHistory');
+        const deleteHistorySelectedBtn = document.getElementById('deleteHistorySelectedBtn');
+        const deleteHistoryAllBtn = document.getElementById('deleteHistoryAllBtn');
+        const deletePinModal = document.getElementById('deletePinModal');
+        const deletePinInput = document.getElementById('deletePinInput');
+        const deletePinError = document.getElementById('deletePinError');
+        const deletePinDescription = document.getElementById('deletePinDescription');
+        const cancelDeletePin = document.getElementById('cancelDeletePin');
+        const confirmDeletePin = document.getElementById('confirmDeletePin');
         const historyLoader = document.getElementById('historyLoader');
         const historyLogTable = document.getElementById('historyLog');
         const historyLogBody = historyLogTable.querySelector('tbody');
@@ -1213,7 +1250,7 @@
             onSnapshot(q, (snapshot) => {
                 logLoader.classList.add('hidden');
                 activityLogBody.innerHTML = '';
-                const activities = snapshot.docs.map(doc => doc.data());
+                const activities = snapshot.docs.map(docSnapshot => ({ id: docSnapshot.id, ...docSnapshot.data() }));
 
                 if (activities.length === 0) {
                     noActivityPara.classList.remove('hidden');
@@ -1231,7 +1268,9 @@
                             teacherName: data.teacherName,
                             grade: data.grade
                         }, jsDate || new Date());
+                        tr.dataset.docId = data.id;
                         tr.innerHTML = `
+                            <td class="px-3 py-4 text-center"><input type="checkbox" class="daily-record-checkbox h-4 w-4" data-id="${data.id}" aria-label="Select ${data.studentName || 'record'}"></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.studentName}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.teacherName || 'N/A'}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.roomNumber || 'N/A'}</td>
@@ -1243,6 +1282,8 @@
                         `;
                         activityLogBody.appendChild(tr);
                     });
+                    selectAllDaily.checked = false;
+                    updateDailyDeleteButton();
                 }
             }, (error) => {
                 console.error("Error listening to activity log:", error);
@@ -1288,7 +1329,7 @@
                 schoolYearHistory = historySnapshot.docs.map(historyDoc => {
                     const data = historyDoc.data();
                     const jsDate = data.timestamp ? data.timestamp.toDate() : null;
-                    return { ...data, jsDate };
+                    return { id: historyDoc.id, ...data, jsDate };
                 }).filter(item => isWithinSchoolYear(item.jsDate));
                 renderSchoolYearHistory();
             } catch (error) {
@@ -1350,7 +1391,9 @@
                     teacherName: data.teacherName,
                     grade: data.grade
                 }, data.jsDate || new Date());
+                tr.dataset.docId = data.id;
                 tr.innerHTML = `
+                    <td class="px-3 py-3 text-center"><input type="checkbox" class="history-record-checkbox h-4 w-4" data-id="${data.id}" aria-label="Select ${data.studentName || 'record'}"></td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${data.studentName || 'N/A'}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">${data.teacherName || 'N/A'}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">${data.roomNumber || 'N/A'}</td>
@@ -1362,6 +1405,8 @@
                 `;
                 historyLogBody.appendChild(tr);
             });
+            selectAllHistory.checked = false;
+            updateHistoryDeleteButton();
         }
 
         async function showSchoolYearHistory() {
@@ -1376,6 +1421,135 @@
             historyAdminPanel.classList.add('hidden');
             dailyAdminPanel.classList.remove('hidden');
             dailyToolbar.classList.remove('hidden');
+        }
+
+        // --- Password-Protected Record Deletion ---
+        let pendingDeleteAction = null;
+
+        function getCheckedIds(selector) {
+            return Array.from(document.querySelectorAll(selector + ':checked')).map(cb => cb.dataset.id);
+        }
+
+        function updateDailyDeleteButton() {
+            deleteDailySelectedBtn.disabled = getCheckedIds('.daily-record-checkbox').length === 0;
+        }
+
+        function updateHistoryDeleteButton() {
+            deleteHistorySelectedBtn.disabled = getCheckedIds('.history-record-checkbox').length === 0;
+        }
+
+        function openDeletePin(action) {
+            pendingDeleteAction = action;
+            deletePinInput.value = '';
+            deletePinError.textContent = '';
+            deletePinDescription.textContent = action.description;
+            deletePinModal.classList.remove('hidden');
+            deletePinInput.focus();
+        }
+
+        function closeDeletePin() {
+            deletePinModal.classList.add('hidden');
+            pendingDeleteAction = null;
+            deletePinInput.value = '';
+            deletePinError.textContent = '';
+        }
+
+        async function deleteDocumentsFromPath(path, ids) {
+            const batchSize = 400;
+            for (let i = 0; i < ids.length; i += batchSize) {
+                const batch = writeBatch(db);
+                ids.slice(i, i + batchSize).forEach(id => batch.delete(doc(db, path, id)));
+                await batch.commit();
+            }
+        }
+
+        async function executeProtectedDelete() {
+            if (deletePinInput.value !== '4160') {
+                deletePinError.textContent = 'Invalid PIN.';
+                deletePinInput.value = '';
+                deletePinInput.focus();
+                return;
+            }
+            if (!pendingDeleteAction) return;
+
+            confirmDeletePin.disabled = true;
+            confirmDeletePin.textContent = 'Deleting...';
+            try {
+                await pendingDeleteAction.run();
+                closeDeletePin();
+            } catch (error) {
+                console.error('Delete failed:', error);
+                deletePinError.textContent = 'Could not delete the selected record(s).';
+            } finally {
+                confirmDeletePin.disabled = false;
+                confirmDeletePin.textContent = 'Delete';
+            }
+        }
+
+        function requestDeleteDailySelected() {
+            const ids = getCheckedIds('.daily-record-checkbox');
+            if (!ids.length) return;
+            openDeletePin({
+                description: `Delete ${ids.length} selected daily record(s)? This removes them from today's report only; School Year History is preserved. Enter PIN 4160 to continue.`,
+                run: async () => {
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+                    await deleteDocumentsFromPath(`artifacts/${appId}/public/data/checkins`, ids);
+                    showMessage(`${ids.length} daily record(s) deleted. School Year History was preserved.`, 'success');
+                }
+            });
+        }
+
+        function requestDeleteAllDaily() {
+            const ids = Array.from(activityLogBody.querySelectorAll('tr[data-doc-id]')).map(tr => tr.dataset.docId);
+            if (!ids.length) { alert('No daily records to delete.'); return; }
+            openDeletePin({
+                description: `Delete all ${ids.length} daily record(s) currently shown? School Year History will be preserved. Enter PIN 4160 to continue.`,
+                run: async () => {
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+                    await deleteDocumentsFromPath(`artifacts/${appId}/public/data/checkins`, ids);
+                    showMessage(`All ${ids.length} daily record(s) deleted. School Year History was preserved.`, 'success');
+                }
+            });
+        }
+
+        function getShownHistoryIds() {
+            return Array.from(historyLogBody.querySelectorAll('tr[data-doc-id]')).map(tr => tr.dataset.docId);
+        }
+
+        function requestDeleteHistorySelected() {
+            const ids = getCheckedIds('.history-record-checkbox');
+            if (!ids.length) return;
+            openDeletePin({
+                description: `Permanently delete ${ids.length} selected School Year History record(s)? Matching daily copies, if still present, will also be removed. Enter PIN 4160 to continue.`,
+                run: async () => {
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+                    const historyPath = `artifacts/${appId}/public/data/schoolYearHistory`;
+                    const dailyPath = `artifacts/${appId}/public/data/checkins`;
+                    await deleteDocumentsFromPath(historyPath, ids);
+                    await deleteDocumentsFromPath(dailyPath, ids);
+                    schoolYearHistory = schoolYearHistory.filter(item => !ids.includes(item.id));
+                    renderSchoolYearHistory();
+                    showMessage(`${ids.length} School Year History record(s) permanently deleted.`, 'success');
+                }
+            });
+        }
+
+        function requestDeleteAllShownHistory() {
+            const ids = getShownHistoryIds();
+            if (!ids.length) { alert('No matching history records to delete.'); return; }
+            openDeletePin({
+                description: `Permanently delete all ${ids.length} School Year History record(s) currently shown by this search/filter? Matching daily copies will also be removed. Enter PIN 4160 to continue.`,
+                run: async () => {
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'wwes-checkin';
+                    const historyPath = `artifacts/${appId}/public/data/schoolYearHistory`;
+                    const dailyPath = `artifacts/${appId}/public/data/checkins`;
+                    await deleteDocumentsFromPath(historyPath, ids);
+                    await deleteDocumentsFromPath(dailyPath, ids);
+                    schoolYearHistory = schoolYearHistory.filter(item => !ids.includes(item.id));
+                    renderSchoolYearHistory();
+                    showMessage(`${ids.length} displayed School Year History record(s) permanently deleted.`, 'success');
+                }
+            });
         }
 
         // --- PDF Generation ---
@@ -1403,6 +1577,7 @@
             title.style.fontFamily = 'Inter, sans-serif';
             
             const tableClone = logTable.cloneNode(true);
+            Array.from(tableClone.querySelectorAll('tr')).forEach(row => { if (row.firstElementChild) row.firstElementChild.remove(); });
             tableClone.style.width = '100%';
             tableClone.style.maxWidth = '100%';
             tableClone.style.tableLayout = 'fixed';
@@ -1499,6 +1674,7 @@
             totals.style.marginBottom = '10px';
 
             const tableClone = historyLogTable.cloneNode(true);
+            Array.from(tableClone.querySelectorAll('tr')).forEach(row => { if (row.firstElementChild) row.firstElementChild.remove(); });
             tableClone.classList.remove('hidden');
             tableClone.style.width = '100%';
             tableClone.style.maxWidth = '100%';
@@ -1597,12 +1773,41 @@
         logoutBtn.addEventListener('click', handleLogout);
         printReportBtn.addEventListener('click', generatePDFReport);
         resetReportBtn.addEventListener('click', () => resetModal.classList.remove('hidden'));
+        deleteDailySelectedBtn.addEventListener('click', requestDeleteDailySelected);
         historyReportBtn.addEventListener('click', showSchoolYearHistory);
         backToDailyBtn.addEventListener('click', showDailyAdminReport);
         historySearch.addEventListener('input', renderSchoolYearHistory);
         historyDateFilter.addEventListener('change', renderSchoolYearHistory);
         historyTypeFilter.addEventListener('change', renderSchoolYearHistory);
         downloadHistorySearchPdfBtn.addEventListener('click', generateHistorySearchPDF);
+        deleteHistorySelectedBtn.addEventListener('click', requestDeleteHistorySelected);
+        deleteHistoryAllBtn.addEventListener('click', requestDeleteAllShownHistory);
+        selectAllDaily.addEventListener('change', () => {
+            document.querySelectorAll('.daily-record-checkbox').forEach(cb => cb.checked = selectAllDaily.checked);
+            updateDailyDeleteButton();
+        });
+        activityLogBody.addEventListener('change', e => {
+            if (e.target.classList.contains('daily-record-checkbox')) {
+                const boxes = Array.from(document.querySelectorAll('.daily-record-checkbox'));
+                selectAllDaily.checked = boxes.length > 0 && boxes.every(cb => cb.checked);
+                updateDailyDeleteButton();
+            }
+        });
+        selectAllHistory.addEventListener('change', () => {
+            document.querySelectorAll('.history-record-checkbox').forEach(cb => cb.checked = selectAllHistory.checked);
+            updateHistoryDeleteButton();
+        });
+        historyLogBody.addEventListener('change', e => {
+            if (e.target.classList.contains('history-record-checkbox')) {
+                const boxes = Array.from(document.querySelectorAll('.history-record-checkbox'));
+                selectAllHistory.checked = boxes.length > 0 && boxes.every(cb => cb.checked);
+                updateHistoryDeleteButton();
+            }
+        });
+        cancelDeletePin.addEventListener('click', closeDeletePin);
+        confirmDeletePin.addEventListener('click', executeProtectedDelete);
+        deletePinInput.addEventListener('keyup', e => { if (e.key === 'Enter') executeProtectedDelete(); });
+
         clearHistorySearchBtn.addEventListener('click', () => {
             historySearch.value = '';
             historyDateFilter.value = '';
