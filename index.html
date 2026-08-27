@@ -304,9 +304,10 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Firebase is loaded dynamically so the user-interface buttons still work
+        // even if the CDN is slow or temporarily blocked by the hosting/browser.
+        let initializeApp, getAuth, signInAnonymously, signInWithCustomToken;
+        let getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc, writeBatch;
 
         // --- DOM Elements ---
         const parentView = document.getElementById('parentView');
@@ -832,7 +833,19 @@
         
         async function initializeFirebase() {
             try {
-                // This will be automatically provided by the hosting environment.
+                // Load Firebase only after the page UI and button handlers are ready.
+                // This is more reliable on static hosts such as GitHub Pages.
+                const [appModule, authModule, firestoreModule] = await Promise.all([
+                    import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"),
+                    import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"),
+                    import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js")
+                ]);
+
+                ({ initializeApp } = appModule);
+                ({ getAuth, signInAnonymously, signInWithCustomToken } = authModule);
+                ({ getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp, limit, orderBy, getDocs, deleteDoc, doc, writeBatch } = firestoreModule);
+
+                // This will be automatically provided by some hosting environments.
                 const firebaseConfigJSON = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
                 const firebaseConfig = {
   apiKey: "AIzaSyD3iCDJDYgyT8tq1TSazq7gtdDl_tdSdXE",
@@ -858,7 +871,7 @@
 
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                logLoader.innerHTML = `<p class="text-red-500">Could not connect to the database. ${error.message}</p>`;
+                if (logLoader) logLoader.innerHTML = `<p class="text-red-500">Could not connect to the database. ${error.message}</p>`;
             }
         }
         
