@@ -520,8 +520,7 @@
             {"firstName": "Eli", "lastName": "Whitworth", "grade": "PK", "teacher": "Geller", "room": 1},
             {"firstName": "Amara", "lastName": "Williams", "grade": "PK", "teacher": "Geller", "room": 1},
             {"firstName": "Evie", "lastName": "Calcote", "grade": "KG", "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Mason", "lastName": "Malloy", "grade": 2, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Ian", "lastName": "Larkin", "grade": 4, "teacher": "Baker", "room": 26},
+            {"firstName": "Mason", "lastName": "Mallory", "grade": 2, "teacher": "Grembowitz", "room": 13},
             {"firstName": "Raymond", "lastName": "D'Arcourt", "grade": 3, "teacher": "Grembowitz", "room": 13},
             {"firstName": "Novah", "lastName": "Jones", "grade": 2, "teacher": "Grembowitz", "room": 13},
             {"firstName": "Cylus", "lastName": "Litzelman", "grade": 3, "teacher": "Grembowitz", "room": 13},
@@ -531,7 +530,6 @@
             {"firstName": "Alekzander", "lastName": "Aguirre", "grade": 2, "teacher": "Heckman", "room": 17},
             {"firstName": "Jackson", "lastName": "Comeau", "grade": 2, "teacher": "Heckman", "room": 17},
             {"firstName": "Santiago", "lastName": "Felix", "grade": 2, "teacher": "Heckman", "room": 17},
-             {"firstName": "Fabian", "lastName": "Rodriguez Aguilar", "grade": 2, "teacher": "Heckman", "room": 17},
             {"firstName": "Olivia", "lastName": "Heil", "grade": 2, "teacher": "Heckman", "room": 17},
             {"firstName": "Delaney", "lastName": "Kleeh", "grade": 2, "teacher": "Heckman", "room": 17},
             {"firstName": "Jaxon", "lastName": "Lett", "grade": 2, "teacher": "Heckman", "room": 17},
@@ -744,7 +742,7 @@
             {"firstName": "Fernanda", "lastName": "Roblero Medina", "grade": "KG", "teacher": "Long", "room": 3},
             {"firstName": "Ronin--Louis", "lastName": "Santiago", "grade": "KG", "teacher": "Long", "room": 3},
             {"firstName": "Makenna", "lastName": "Thomas", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Omar", "lastName": "Wilson", "grade": "KG", "teacher": "Long", "room": 3},
+            {"firstName": "Omar", "lastName": "Wilson Iii", "grade": "KG", "teacher": "Long", "room": 3},
             {"firstName": "Emenna", "lastName": "Atkins", "grade": 5, "teacher": "St. Clair", "room": 31},
             {"firstName": "Xiamara", "lastName": "Calhoun", "grade": 5, "teacher": "St. Clair", "room": 31},
             {"firstName": "Morgan", "lastName": "Coleman", "grade": 5, "teacher": "St. Clair", "room": 31},
@@ -774,7 +772,6 @@
             {"firstName": "Sylas", "lastName": "Wheeler", "grade": 5, "teacher": "Tyree-Herrmann", "room": 16},
             {"firstName": "Ezra", "lastName": "Bell Watson", "grade": 1, "teacher": "Webb", "room": 7},
             {"firstName": "Joy", "lastName": "Dunsworth", "grade": 1, "teacher": "Webb", "room": 7},
-             {"firstName": "London", "lastName": "Daniels", "grade": 2, "teacher": "Grembowitz", "room": 13},
             {"firstName": "Jordan", "lastName": "Gonzalez", "grade": 1, "teacher": "Webb", "room": 7},
             {"firstName": "Darius", "lastName": "Groome", "grade": 1, "teacher": "Webb", "room": 7},
             {"firstName": "Elena", "lastName": "Mcneill", "grade": 1, "teacher": "Webb", "room": 7},
@@ -1142,11 +1139,11 @@
         }
 
         // --- 5th Grade Rotation Override ---
-        // Source: 5th_Grade_Student_Location_Master_UPDATED(1).xlsx
+        // Source: revised 5th Grade Student Location Master (08/28/26)
         // For students whose homeroom teacher is Estep, Huggins, or St. Clair,
         // use the detailed 5th-grade rotation before the general master schedule.
         const fifthGradeTeacherDetails = {
-            "Estep": { room: "30", subject: "Content" },
+            "Estep": { room: "30", subject: "Science/SS" },
             "Huggins": { room: "29", subject: "Math" },
             "St. Clair": { room: "31", subject: "Language Arts" }
         };
@@ -1180,10 +1177,11 @@
             return null;
         }
 
-        function fifthGradeClassroomLabel(teacher) {
+        function fifthGradeClassroomLabel(teacher, subjectOverride = null) {
             const details = fifthGradeTeacherDetails[teacher];
             if (!details) return 'In Class / Recess';
-            return `${teacher} – Room ${details.room} (${details.subject})`;
+            const subject = subjectOverride || details.subject;
+            return `${teacher} – Room ${details.room} (${subject})`;
         }
 
         function getFifthGradeRotationLocation(student, dateObj = new Date()) {
@@ -1196,42 +1194,48 @@
             const now = dateObj.getHours() * 60 + dateObj.getMinutes();
             const inMinutes = (start, end) => now >= start && now < end;
 
-            // 8:05–8:30 Morning / homeroom
-            if (inMinutes(8 * 60 + 5, 8 * 60 + 30)) {
-                return `${homeroom} – Room ${fifthGradeTeacherDetails[homeroom].room} (Homeroom)`;
+            // 8:05–8:20 Announcements / Morning Meeting in homeroom.
+            if (inMinutes(8 * 60 + 5, 8 * 60 + 20)) {
+                return `${homeroom} – Room ${fifthGradeTeacherDetails[homeroom].room} (Morning Meeting)`;
             }
 
-            // 8:30–9:50 Block 1: each homeroom stays with its namesake teacher.
-            if (inMinutes(8 * 60 + 30, 9 * 60 + 50)) {
+            // 8:20–10:15 Block 1: each homeroom stays with its namesake teacher.
+            if (inMinutes(8 * 60 + 20, 10 * 60 + 15)) {
+                if (homeroom === 'Estep') return fifthGradeClassroomLabel('Estep', 'Science/SS + LA Integration');
                 return fifthGradeClassroomLabel(homeroom);
             }
 
-            // 9:50–10:50 Block 2.
-            if (inMinutes(9 * 60 + 50, 10 * 60 + 50)) {
+            // 10:15–10:50 Block 2. Revised Huggins schedule keeps Huggins HR
+            // with Huggins for Math on Thursday and Friday during this segment.
+            if (inMinutes(10 * 60 + 15, 10 * 60 + 50)) {
+                if (homeroom === 'Huggins' && (day === 'Thursday' || day === 'Friday')) {
+                    return fifthGradeClassroomLabel('Huggins');
+                }
                 return fifthGradeClassroomLabel(fifthGradeBlock2Teacher[homeroom]);
             }
 
             // 10:50–11:20 Lunch for all three homerooms.
             if (inMinutes(10 * 60 + 50, 11 * 60 + 20)) return 'Lunch';
 
-            // 11:20–11:50 Resume Block 2.
-            if (inMinutes(11 * 60 + 20, 11 * 60 + 50)) {
+            // 11:20–11:55 Continue Block 2. Huggins HR is with Estep here every day.
+            if (inMinutes(11 * 60 + 20, 11 * 60 + 55)) {
                 return fifthGradeClassroomLabel(fifthGradeBlock2Teacher[homeroom]);
             }
 
-            // 11:50–12:05 Recess.
-            if (inMinutes(11 * 60 + 50, 12 * 60 + 5)) return 'Recess';
+            // 11:55–12:10 Recess.
+            if (inMinutes(11 * 60 + 55, 12 * 60 + 10)) return 'Recess';
 
-            // 12:05–12:45 Block 3.
-            if (inMinutes(12 * 60 + 5, 12 * 60 + 45)) {
+            // 12:10–12:45 Block 3.
+            if (inMinutes(12 * 60 + 10, 12 * 60 + 45)) {
                 return fifthGradeClassroomLabel(fifthGradeBlock3Teacher[homeroom]);
             }
 
-            // 12:45–1:30 PE / Strings. Strings is optional on Monday/Wednesday,
-            // so the schedule cannot distinguish an individual student's choice.
-            if (inMinutes(12 * 60 + 45, 13 * 60 + 30)) return 'PE / Strings';
+            // 12:45–1:30 PE; optional Strings is offered Monday and Wednesday.
+            if (inMinutes(12 * 60 + 45, 13 * 60 + 30)) {
+                return (day === 'Monday' || day === 'Wednesday') ? 'PE / Strings' : 'PE';
+            }
 
-            // 1:30–2:30 continues Block 3, with Art/Music exceptions 1:40–2:20.
+            // 1:30–2:30 continues Block 3, with Art/Music exceptions from 1:40–2:20.
             if (inMinutes(13 * 60 + 30, 14 * 60 + 30)) {
                 if (inMinutes(13 * 60 + 40, 14 * 60 + 20)) {
                     const special = fifthGradeSpecialExceptions[day]?.[homeroom];
@@ -1240,9 +1244,9 @@
                 return fifthGradeClassroomLabel(fifthGradeBlock3Teacher[homeroom]);
             }
 
-            // 2:30–2:35 return to homeroom / dismissal.
+            // 2:30–2:35 dismissal / homeroom transition.
             if (inMinutes(14 * 60 + 30, 14 * 60 + 35)) {
-                return `${homeroom} – Room ${fifthGradeTeacherDetails[homeroom].room} (Homeroom / Dismissal)`;
+                return `${homeroom} – Room ${fifthGradeTeacherDetails[homeroom].room} (Dismissal)`;
             }
 
             return 'In Class / Recess';
