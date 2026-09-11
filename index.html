@@ -57,9 +57,11 @@
                     <p class="text-center text-gray-600 mb-6">Please select an option:</p>
                     <div class="flex flex-col gap-6">
                         <div class="flex flex-col sm:flex-row sm:space-x-4">
-                            <button type="button" id="startCheckInBtn" class="w-full bg-blue-600 text-white font-semibold py-4 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out text-lg">Check In Late</button>
-                            <button type="button" id="startPickUpBtn" class="w-full bg-yellow-500 text-white font-semibold py-4 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition duration-150 ease-in-out text-lg mt-4 sm:mt-0">Pick Up Early</button>
+                            <button type="button" id="startCheckInBtn" class="w-full bg-blue-600 text-white font-semibold py-4 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out text-lg disabled:opacity-40 disabled:cursor-not-allowed">Check In Late</button>
+                            <button type="button" id="startPickUpBtn" class="w-full bg-yellow-500 text-white font-semibold py-4 px-4 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition duration-150 ease-in-out text-lg mt-4 sm:mt-0 disabled:opacity-40 disabled:cursor-not-allowed">Pick Up Early</button>
                         </div>
+                        <button type="button" id="startLatePickUpBtn" class="w-full bg-red-200 text-red-900 font-semibold py-3 px-4 rounded-lg hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-300 transition duration-150 ease-in-out text-md disabled:opacity-40 disabled:cursor-not-allowed">Pick Up Late, after 2:50 PM</button>
+                        <p id="actionAvailabilityMessage" class="text-xs text-center text-gray-500 -mt-3"></p>
                          <button type="button" id="startAdminBtn" class="w-full bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-600 transition duration-150 ease-in-out text-md">Admin Login</button>
                     </div>
                 </div>
@@ -114,7 +116,7 @@
                                     <!-- Final verified students will be listed here -->
                                 </ul>
                             </div>
-                            <div>
+                            <div id="reasonContainer">
                                 <label for="reason" class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
                                 <select id="reason" name="reason" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white">
                                     <!-- Options will be populated by JS -->
@@ -206,6 +208,7 @@
                                 <option value="">All activity</option>
                                 <option value="Check In Late">Check In Late</option>
                                 <option value="Pick Up Early">Pick Up Early</option>
+                                <option value="Pick Up Late, after 2:50 PM">Pick Up Late, after 2:50 PM</option>
                             </select>
                         </div>
                         <div class="flex items-end gap-2">
@@ -218,7 +221,7 @@
                         <button id="deleteHistoryAllBtn" class="bg-red-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-900">Delete All Shown</button>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-5">
                         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
                             <div class="text-xs uppercase tracking-wide text-gray-500">Total Events</div>
                             <div id="historyTotalCount" class="text-3xl font-bold text-gray-800">0</div>
@@ -230,6 +233,10 @@
                         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
                             <div class="text-xs uppercase tracking-wide text-yellow-700">Early Pickups</div>
                             <div id="historyEarlyCount" class="text-3xl font-bold text-yellow-700">0</div>
+                        </div>
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                            <div class="text-xs uppercase tracking-wide text-red-700">Late Pickups</div>
+                            <div id="historyLatePickupCount" class="text-3xl font-bold text-red-700">0</div>
                         </div>
                     </div>
 
@@ -318,6 +325,8 @@
         const detailsStep = document.getElementById('detailsStep');
         const startCheckInBtn = document.getElementById('startCheckInBtn');
         const startPickUpBtn = document.getElementById('startPickUpBtn');
+        const startLatePickUpBtn = document.getElementById('startLatePickUpBtn');
+        const actionAvailabilityMessage = document.getElementById('actionAvailabilityMessage');
         const startAdminBtn = document.getElementById('startAdminBtn');
         const backButton = document.getElementById('backButton');
         const portalTitle = document.getElementById('portalTitle');
@@ -327,6 +336,7 @@
         const studentSuggestions = document.getElementById('studentSuggestions');
         const studentNameStatus = document.getElementById('studentNameStatus');
         const reasonSelect = document.getElementById('reason');
+        const reasonContainer = document.getElementById('reasonContainer');
         const submitBtn = document.getElementById('submitBtn');
         const messageDiv = document.getElementById('message');
         const verifyAndContinueBtn = document.getElementById('verifyAndContinueBtn');
@@ -373,6 +383,7 @@
         const historyTotalCount = document.getElementById('historyTotalCount');
         const historyLateCount = document.getElementById('historyLateCount');
         const historyEarlyCount = document.getElementById('historyEarlyCount');
+        const historyLatePickupCount = document.getElementById('historyLatePickupCount');
         let schoolYearHistory = [];
         
         // PIN Modal Elements
@@ -829,9 +840,9 @@
             {"firstName": "Theodore", "lastName": "Thompson", "grade": 4, "teacher": "", "room": null},
             {"firstName": "Emery", "lastName": "Wong", "grade": 1, "teacher": "Webb", "room": 7},
             {"firstName": "Jody", "lastName": "Wright", "grade": 2, "teacher": "", "room": null},
-            {"firstName": "Adonis", "lastName": "Young", "grade": 1, "tealoredocher": "Webb", "room": 7}
+            {"firstName": "Adonis", "lastName": "Young", "grade": 1, "teacher": "Webb", "room": 7}
         ];
-        let currentActionType = ''; // 'Check In Late' or 'Pick Up Early'
+        let currentActionType = ''; // 'Check In Late', 'Pick Up Early', or 'Pick Up Late, after 2:50 PM'
         let isStudentSelected = false;
 
         // --- Firebase Setup ---
@@ -881,8 +892,55 @@
             }
         }
         
+        // --- Main-screen action availability ---
+        // Regular check-in / early-pickup actions are available from 8:00 AM until 2:49 PM.
+        // Beginning at 2:50 PM (and overnight until 8:00 AM), only late pickup and Admin remain available.
+        function getAvailabilityTime(dateObj = new Date()) {
+            return dateObj;
+        }
+
+        function isLatePickupHours(dateObj = new Date()) {
+            const effectiveDate = getAvailabilityTime(dateObj);
+            const minutes = effectiveDate.getHours() * 60 + effectiveDate.getMinutes();
+            return minutes >= (14 * 60 + 50) || minutes < (8 * 60);
+        }
+
+        function updateActionAvailability() {
+            const lateHours = isLatePickupHours();
+            startCheckInBtn.disabled = lateHours;
+            startPickUpBtn.disabled = lateHours;
+            startLatePickUpBtn.disabled = !lateHours;
+
+            // Light red while unavailable; dark red with white lettering when active after 2:50 PM.
+            startLatePickUpBtn.classList.toggle('bg-red-200', !lateHours);
+            startLatePickUpBtn.classList.toggle('text-red-900', !lateHours);
+            startLatePickUpBtn.classList.toggle('hover:bg-red-300', !lateHours);
+            startLatePickUpBtn.classList.toggle('bg-red-700', lateHours);
+            startLatePickUpBtn.classList.toggle('text-white', lateHours);
+            startLatePickUpBtn.classList.toggle('hover:bg-red-800', lateHours);
+            startLatePickUpBtn.classList.toggle('focus:ring-red-500', lateHours);
+
+            if (lateHours) {
+                actionAvailabilityMessage.textContent = 'After 2:50 PM: regular check-in and early pickup are closed until 8:00 AM.';
+            } else {
+                actionAvailabilityMessage.textContent = 'Late pickup becomes available at 2:50 PM.';
+            }
+
+        }
+
         // --- UI Navigation ---
         function showForm(actionType) {
+            const lateHours = isLatePickupHours();
+            if ((actionType === 'Check In Late' || actionType === 'Pick Up Early') && lateHours) {
+                showMessage('This option is unavailable after 2:50 PM and will reopen at 8:00 AM.', 'error');
+                updateActionAvailability();
+                return;
+            }
+            if (actionType === 'Pick Up Late, after 2:50 PM' && !lateHours) {
+                showMessage('Late pickup becomes available at 2:50 PM.', 'error');
+                updateActionAvailability();
+                return;
+            }
             currentActionType = actionType;
             initialScreen.classList.add('hidden');
             mainContent.classList.remove('hidden');
@@ -902,18 +960,28 @@
                 'Check In Late': ['Doctor/Dentist appointment * Note must be provided *', 'Personal', 'Overslept', 'Traffic', 'Running late', 'Bus No-show', 'Appointment * Note must be provided *'],
                 'Pick Up Early': ['Early Dismissal - Appointment', 'Early Dismissal - Personal', 'Clinic sent home', 'Inclement Weather']
             };
-            
-            let optionsHtml = `<option value="" disabled selected>Select a reason...</option>`;
-            reasons[actionType].forEach(reason => {
-                optionsHtml += `<option value="${reason}">${reason}</option>`;
-            });
-            reasonSelect.innerHTML = optionsHtml;
+
+            if (actionType === 'Pick Up Late, after 2:50 PM') {
+                reasonContainer.classList.add('hidden');
+                reasonSelect.required = false;
+                reasonSelect.innerHTML = '<option value="">No reason required</option>';
+            } else {
+                reasonContainer.classList.remove('hidden');
+                reasonSelect.required = true;
+                let optionsHtml = `<option value="" disabled selected>Select a reason...</option>`;
+                reasons[actionType].forEach(reason => {
+                    optionsHtml += `<option value="${reason}">${reason}</option>`;
+                });
+                reasonSelect.innerHTML = optionsHtml;
+            }
 
             submitBtn.textContent = `Submit for All Students`;
             if (actionType === 'Check In Late') {
                 submitBtn.className = 'w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out bg-blue-600 hover:bg-blue-700 focus:ring-blue-500';
+            } else if (actionType === 'Pick Up Early') {
+                submitBtn.className = 'w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400';
             } else {
-                 submitBtn.className = 'w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-400';
+                submitBtn.className = 'w-full text-red-900 font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out bg-red-200 hover:bg-red-300 focus:ring-red-300';
             }
         }
 
@@ -926,6 +994,9 @@
             studentSuggestions.classList.add('hidden');
             verifiedStudents = [];
             selectedStudent = null;
+            reasonContainer.classList.remove('hidden');
+            reasonSelect.required = true;
+            updateActionAvailability();
         }
 
         function studentKey(student) {
@@ -956,7 +1027,7 @@
             anotherStudentStep.classList.remove('hidden');
             backButton.textContent = '← Back to student name';
             
-            const actionText = currentActionType === 'Check In Late' ? 'check in' : 'check out';
+            const actionText = currentActionType === 'Check In Late' ? 'check in' : 'pick up';
             anotherStudentQuestion.textContent = `Do you have another student to ${actionText}?`;
 
             verifiedStudentsList.innerHTML = '';
@@ -1291,13 +1362,23 @@
         // --- Form Submission ---
         async function handleFormSubmit(event) {
             event.preventDefault();
-            const reason = reasonSelect.value;
+            const lateHours = isLatePickupHours();
+            if ((currentActionType === 'Check In Late' || currentActionType === 'Pick Up Early') && lateHours) {
+                showMessage('This option closed at 2:50 PM. Please return and use Late Pickup.', 'error');
+                return;
+            }
+            if (currentActionType === 'Pick Up Late, after 2:50 PM' && !lateHours) {
+                showMessage('Late pickup cannot be submitted before 2:50 PM.', 'error');
+                return;
+            }
+
+            const reason = currentActionType === 'Pick Up Late, after 2:50 PM' ? '' : reasonSelect.value;
             
             if (verifiedStudents.length === 0) {
                  showMessage('No students have been verified.', 'error');
                  return;
             }
-            if (!reason) {
+            if (currentActionType !== 'Pick Up Late, after 2:50 PM' && !reason) {
                 showMessage('Please select a reason.', 'error');
                 return;
             }
@@ -1314,7 +1395,7 @@
                     teacherName: student.teacher || 'N/A',
                     roomNumber: student.room !== '' && student.room !== null && student.room !== undefined ? String(student.room) : 'N/A',
                     grade: student.grade !== '' && student.grade !== null && student.grade !== undefined ? String(student.grade) : 'N/A',
-                    scheduleLocation: getStudentLocation(student, new Date()),
+                    scheduleLocation: currentActionType === 'Pick Up Late, after 2:50 PM' ? 'After School Hours' : getStudentLocation(student, new Date()),
                     parentName: 'N/A', // Parent name removed
                     reason: reason,
                     type: currentActionType,
@@ -1412,7 +1493,7 @@
                         const jsDate = data.timestamp ? data.timestamp.toDate() : null;
                         const date = jsDate ? jsDate.toLocaleDateString() : 'N/A';
                         const time = jsDate ? jsDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
-                        const statusClass = data.type === 'Check In Late' ? 'text-blue-600' : 'text-yellow-600';
+                        const statusClass = data.type === 'Check In Late' ? 'text-blue-600' : data.type === 'Pick Up Late, after 2:50 PM' ? 'text-red-600' : 'text-yellow-600';
                         const location = getDisplayLocation(data, jsDate || new Date());
                         tr.dataset.docId = data.id;
                         tr.innerHTML = `
@@ -1513,6 +1594,7 @@
             historyTotalCount.textContent = baseMatches.length;
             historyLateCount.textContent = baseMatches.filter(item => item.type === 'Check In Late').length;
             historyEarlyCount.textContent = baseMatches.filter(item => item.type === 'Pick Up Early').length;
+            historyLatePickupCount.textContent = baseMatches.filter(item => item.type === 'Pick Up Late, after 2:50 PM').length;
 
             const displayed = baseMatches.filter(item => !typeFilter || item.type === typeFilter);
             historyLogBody.innerHTML = '';
@@ -1532,7 +1614,7 @@
                 const tr = document.createElement('tr');
                 const date = data.jsDate ? data.jsDate.toLocaleDateString() : 'N/A';
                 const time = data.jsDate ? data.jsDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
-                const statusClass = data.type === 'Check In Late' ? 'text-blue-600' : 'text-yellow-600';
+                const statusClass = data.type === 'Check In Late' ? 'text-blue-600' : data.type === 'Pick Up Late, after 2:50 PM' ? 'text-red-600' : 'text-yellow-600';
                 const location = getDisplayLocation(data, data.jsDate || new Date());
                 tr.dataset.docId = data.id;
                 tr.innerHTML = `
@@ -1811,7 +1893,7 @@
             subtitle.style.marginBottom = '4px';
 
             const totals = document.createElement('div');
-            totals.innerText = `Total Events: ${historyTotalCount.textContent}   |   Late Check-ins: ${historyLateCount.textContent}   |   Early Pickups: ${historyEarlyCount.textContent}   |   Rows in this PDF: ${rows.length}`;
+            totals.innerText = `Total Events: ${historyTotalCount.textContent}   |   Late Check-ins: ${historyLateCount.textContent}   |   Early Pickups: ${historyEarlyCount.textContent}   |   Late Pickups: ${historyLatePickupCount.textContent}   |   Rows in this PDF: ${rows.length}`;
             totals.style.textAlign = 'center';
             totals.style.fontSize = '9pt';
             totals.style.marginBottom = '10px';
@@ -1863,7 +1945,7 @@
                 ? '_' + searchText.replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '').slice(0, 40)
                 : '';
             const safeDateFilter = dateFilter ? '_' + dateFilter : '';
-            const safeType = typeFilter === 'Check In Late' ? '_Late' : typeFilter === 'Pick Up Early' ? '_Early' : '';
+            const safeType = typeFilter === 'Check In Late' ? '_Late' : typeFilter === 'Pick Up Early' ? '_Early' : typeFilter === 'Pick Up Late, after 2:50 PM' ? '_LatePickup' : '';
 
             const options = {
                 margin:       [0.2, 0.2, 0.2, 0.2],
@@ -1892,6 +1974,10 @@
         // --- Event Listeners ---
         startCheckInBtn.addEventListener('click', () => showForm('Check In Late'));
         startPickUpBtn.addEventListener('click', () => showForm('Pick Up Early'));
+        startLatePickUpBtn.addEventListener('click', () => showForm('Pick Up Late, after 2:50 PM'));
+        updateActionAvailability();
+        setInterval(updateActionAvailability, 30000);
+
         startAdminBtn.addEventListener('click', () => {
             pinInput.value = '';
             pinError.textContent = '';
