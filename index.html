@@ -403,447 +403,3122 @@
         let verifiedStudents = [];
         let selectedStudent = null;
         const students = [
-            {"firstName": "Samuel", "lastName": "Bullock", "grade": 3, "teacher": "Armstrong", "room": 6},
-            {"firstName": "Samson", "lastName": "Gannaban", "grade": 3, "teacher": "Armstrong", "room": 6},
-            {"firstName": "August", "lastName": "Pavlovich", "grade": 1, "teacher": "Armstrong", "room": 6},
-            {"firstName": "Hendrick", "lastName": "Rivas", "grade": 3, "teacher": "Armstrong", "room": 6},
-            {"firstName": "Jace", "lastName": "Roden", "grade": 3, "teacher": "Armstrong", "room": 6},
-            {"firstName": "Jacob", "lastName": "Tjon Eng Soe", "grade": 2, "teacher": "Armstrong", "room": 6},
-            {"firstName": "Christian", "lastName": "Whitworth", "grade": 2, "teacher": "Armstrong", "room": 6},
-            {"firstName": "Olivia", "lastName": "Ballou", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Sofia", "lastName": "Cali", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Arya", "lastName": "Carter", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Selena", "lastName": "De Vera Bay", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Lynnorah", "lastName": "Engstrand-Irwin", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Divonlee Etsin", "lastName": "Etse", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Elijah", "lastName": "Faison Jr.", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Zorial", "lastName": "Felton", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Melanie", "lastName": "Gonzales", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Sioeli", "lastName": "Langi", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Maryjane", "lastName": "Larkin", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Ibraheem", "lastName": "Manzoor", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Bailey", "lastName": "Monahan", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Jalen", "lastName": "Nickles", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Kathleen", "lastName": "Oettel", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Emma", "lastName": "Owens", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Mason", "lastName": "Renn", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Brady", "lastName": "Roundtree", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Kameron", "lastName": "Stanley", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Liam", "lastName": "Wilson", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Grayson", "lastName": "Zeiders", "grade": 4, "teacher": "Baker", "room": 26},
-            {"firstName": "Landreth", "lastName": "Oliveira", "grade": "PS", "teacher": "Bruffy", "room": "10A"},
-            {"firstName": "Raiden", "lastName": "Campbell", "grade": "PS", "teacher": "Bruffy", "room": "10P"},
-            {"firstName": "Isaiah", "lastName": "Schoenborn", "grade": "PS", "teacher": "Bruffy", "room": "10A"},
-            {"firstName": "Hevanny", "lastName": "Perez", "grade": "PS", "teacher": "Bruffy", "room": "10A"},
-            {"firstName": "Mateo", "lastName": "Quillas Gonzalez", "grade": "PS", "teacher": "Bruffy", "room": "10A"},
-            {"firstName": "Ai'Lani", "lastName": "Tauti", "grade": "PS", "teacher": "Bruffy", "room": "10A"},
-            {"firstName": "Thomas", "lastName": "Wood", "grade": "PS", "teacher": "Bruffy", "room": "10A"},
-            {"firstName": "Leo", "lastName": "Castillo Boehme", "grade": "PK", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Chance", "lastName": "Ganiyu", "grade": "PS", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Kindle", "lastName": "Jackson", "grade": "PS", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Aries", "lastName": "Jones", "grade": "PS", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Braxton", "lastName": "Long", "grade": "PS", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Vera", "lastName": "Powell", "grade": "PS", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Aliana", "lastName": "Sibal", "grade": "PS", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Queen", "lastName": "Davis", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Caden", "lastName": "Barnes", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Cali", "lastName": "Batty", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Eisley", "lastName": "Copeland", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Harper", "lastName": "Fawley", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Reagan", "lastName": "Freihofer", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Slater", "lastName": "Kelly", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Makenna", "lastName": "Malone", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Wyatt", "lastName": "Mann", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Joanna", "lastName": "Munro", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Damon", "lastName": "Sillars", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Messiah", "lastName": "Baxter", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Greyson", "lastName": "Crowder", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Dillon", "lastName": "Domanski", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Asher", "lastName": "Hall", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Amelia", "lastName": "Hermann", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Isra", "lastName": "Kassabi", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Jenavieve", "lastName": "Klepacz", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Amelia", "lastName": "Kwok", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Lula", "lastName": "Leger", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Odin", "lastName": "Lyons", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Ryu", "lastName": "Martinez", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Bayleigh", "lastName": "Perdue", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Andrew", "lastName": "Roy", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Leander", "lastName": "Walen", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Jayden", "lastName": "Willis", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Sylvia", "lastName": "Wright", "grade": 3, "teacher": "Colombrito", "room": 20},
-            {"firstName": "Aniston", "lastName": "Colombrito", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Kingston", "lastName": "Culp", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Natalia", "lastName": "Franco", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Lucas", "lastName": "Guidry", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Julianna", "lastName": "Guswiler", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Jaxon", "lastName": "Hill", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Allen", "lastName": "Key", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Lauren", "lastName": "Lin", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "John", "lastName": "Mcdowell", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Tommie", "lastName": "Murphy", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Ada", "lastName": "Reilly", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Chandler", "lastName": "St. Clair", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Dean", "lastName": "Tran", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Rylee", "lastName": "Wommack", "grade": 1, "teacher": "Crawford", "room": 5},
-            {"firstName": "Beau", "lastName": "Burris", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Lorenzo", "lastName": "De Vera Bay", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Alina", "lastName": "Engstrand", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Carter", "lastName": "Fields", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Ares", "lastName": "Flowers", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Nora", "lastName": "Gray", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Catalina", "lastName": "Guiles", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Travis", "lastName": "Hamlin", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "David", "lastName": "Hesse", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Leidon", "lastName": "Lee", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Connor", "lastName": "Logan", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Karley", "lastName": "Shacklette", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Danilo", "lastName": "Vargas", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Murphy", "lastName": "Waldin", "grade": 3, "teacher": "Driscoll", "room": 24},
-            {"firstName": "Sophia", "lastName": "Aoki", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Noah", "lastName": "Collins", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Leona", "lastName": "Douglas-Patterson", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Ellie", "lastName": "Ebersole", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Antonio", "lastName": "Escalante", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Taylor", "lastName": "Freeman Gatlin", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "A'Hriyon", "lastName": "Hall", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Lillian", "lastName": "Hastings", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Jaythan", "lastName": "Jimenez Gonzalez", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Beckett", "lastName": "Lessard", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Olivia", "lastName": "Moses", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Scarlet", "lastName": "Murphy", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Lucas", "lastName": "Previtire", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Alexander", "lastName": "Schaus", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Margaret", "lastName": "Schulze", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Jaxon Xavier", "lastName": "Stewart", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Isaiah", "lastName": "White Turner", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Emmalina", "lastName": "Womack", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Gael", "lastName": "Allen", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Ali-Rasheed", "lastName": "Baughns, Jr.", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Luke", "lastName": "Bernal", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Brooklyn", "lastName": "Collins", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Kallahan", "lastName": "Da Silva", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Selena", "lastName": "Dhalai", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Tavi", "lastName": "Eaton", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Bradley", "lastName": "Escalante Roblero", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Hannah", "lastName": "Gray", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Garrett", "lastName": "Lessard", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Lauryn", "lastName": "Norfleet", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Ryder", "lastName": "Sweeney", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Eli", "lastName": "Whitworth", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Amara", "lastName": "Williams", "grade": "PK", "teacher": "Geller", "room": 1},
-            {"firstName": "Evie", "lastName": "Calcote", "grade": "KG", "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Mason", "lastName": "Malloy", "grade": 2, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "London", "lastName": "Daniels", "grade": 2, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Raymond", "lastName": "D'Arcourt", "grade": 3, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Je'Von", "lastName": "Mathiasen", "grade": "KG", "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Novah", "lastName": "Jones", "grade": 2, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Cylus", "lastName": "Litzelman", "grade": 3, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Cadence", "lastName": "Mcneely", "grade": 3, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Payton", "lastName": "Terry", "grade": 3, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Quinn", "lastName": "Van Valkenburg", "grade": 2, "teacher": "Grembowitz", "room": 13},
-            {"firstName": "Alekzander", "lastName": "Aguirre", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Jackson", "lastName": "Comeau", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Santiago", "lastName": "Felix", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Olivia", "lastName": "Heil", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Delaney", "lastName": "Kleeh", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Jaxon", "lastName": "Lett", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Britton", "lastName": "Malone", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Teeda", "lastName": "Nonthaveth", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Kate", "lastName": "Phan", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Sofia", "lastName": "Silva", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Otto", "lastName": "Stanley", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Fabian", "lastName": "Rodriguez Aguilar", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Lorelei", "lastName": "Young", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Josue", "lastName": "Loredo-Villanueva", "grade": "PS", "teacher": "Heil", "room": "10P"},
-            {"firstName": "Josue", "lastName": "Villanueva", "grade": "PS", "teacher": "Heil", "room": "10P"},
-            {"firstName": "Beckham", "lastName": "Stallard", "grade": "PS", "teacher": "Heil", "room": "10P"},
-            {"firstName": "Kalen", "lastName": "Williams", "grade": "PS", "teacher": "Heil", "room": "10P"},
-            {"firstName": "Aniko", "lastName": "Young-Tillery", "grade": "PS", "teacher": "Heil", "room": "10P"},
-            {"firstName": "Leo", "lastName": "Bernal", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Adeline", "lastName": "Burford", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Mohamed", "lastName": "Dhalai", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Estella", "lastName": "Duffy", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Willow", "lastName": "Etheridge", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Avery", "lastName": "Heil", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Cayman", "lastName": "Key", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Sarai", "lastName": "Mingo", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Kyree", "lastName": "Newsome", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Alanna", "lastName": "Piga-Hamlin", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Jerriah", "lastName": "Satterfield", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Ezra", "lastName": "Smith", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Emilia", "lastName": "Tran", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Bryson", "lastName": "Williams", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Zain", "lastName": "Ziara", "grade": "PK", "teacher": "Hodges", "room": 2},
-            {"firstName": "Isaiah", "lastName": "Coats", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Quentin", "lastName": "De Vera Bay", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Miles", "lastName": "Dunsworth", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Landon", "lastName": "Fort", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Colton", "lastName": "Glende", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Nelly", "lastName": "Gonzalez", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "James", "lastName": "Greene", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Macie", "lastName": "Groves", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Hatch", "lastName": "Harding", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Dakota", "lastName": "Harver", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Brooklynn", "lastName": "Hovemeyer", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Zoebelle", "lastName": "Ilao", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Jameson", "lastName": "Jones", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Victoria", "lastName": "Kerzner", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Florence", "lastName": "Lian", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Nelson", "lastName": "Lyons", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Siwa", "lastName": "Messan", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Christopher", "lastName": "Penn", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Adam Damien", "lastName": "Peredo", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Avery", "lastName": "Smith", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Ryan", "lastName": "Sola", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "William", "lastName": "Starnes", "grade": 5, "teacher": "Huggins", "room": 29},
-            {"firstName": "Aalayah", "lastName": "Arrington", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Luca", "lastName": "Atkins", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Colton", "lastName": "Duke", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Arue Leialoha", "lastName": "Etse", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Carly", "lastName": "Klepacz", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Bodhi", "lastName": "Knowles", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Bryson", "lastName": "Piga-Hamlin", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Emily", "lastName": "Schaus", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Micah", "lastName": "Schmeding", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Aubrey", "lastName": "Silva", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Cohen", "lastName": "Smith", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Joycelynn", "lastName": "Tuschl", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Paul", "lastName": "You", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "June", "lastName": "Adams", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Mckenzie", "lastName": "Coleman", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Adrian", "lastName": "Demer", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Lilah", "lastName": "Fields", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Pierre", "lastName": "Hyman", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Ava", "lastName": "Metz", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Kayla", "lastName": "Pinkney", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Gracelynn", "lastName": "Roberts", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Andrea", "lastName": "Rondeau Claggett", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Javien", "lastName": "Thompson", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Luciano", "lastName": "Wilkin", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Dean", "lastName": "Windham", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Gabriella", "lastName": "Arestozo", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Paige", "lastName": "Bailey", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Christopher", "lastName": "Bates", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "William", "lastName": "Bruffy", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Brooklyn", "lastName": "Davis", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Forrest", "lastName": "Engstrand-Irwin", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Lincoln", "lastName": "Hermann", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Darren", "lastName": "Lin", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Gerardo", "lastName": "Loredo-Villanueva", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Gerardo", "lastName": "Villanueva", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Henson", "lastName": "Miller", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Elaine", "lastName": "Nguyen", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Gracelyn", "lastName": "Sacksteder", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Ryleigh", "lastName": "Steen", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Kaladin", "lastName": "Taylor", "grade": 1, "teacher": "Lett", "room": 11},
-            {"firstName": "Grayson", "lastName": "Barth", "grade": "PS", "teacher": "Nickles", "room": "12P"},
-            {"firstName": "Izaiah", "lastName": "Everett", "grade": "PS", "teacher": "Nickles", "room": "12P"},
-            {"firstName": "Kaelyx", "lastName": "Kitchen", "grade": "PS", "teacher": "Nickles", "room": "12P"},
-            {"firstName": "Carter", "lastName": "Mckeeby", "grade": "PS", "teacher": "Nickles", "room": "12P"},
-            {"firstName": "Ocean", "lastName": "Ramos", "grade": "PS", "teacher": "Nickles", "room": "12P"},
-            {"firstName": "Matthew", "lastName": "Walker", "grade": "PS", "teacher": "Nickles", "room": "12P"},
-            {"firstName": "Roman", "lastName": "Barnett", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Jaxon", "lastName": "Conner", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Angel", "lastName": "Freeman", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Iris", "lastName": "Grace", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Mariam", "lastName": "Kaba", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "John", "lastName": "Perrigin", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Kenneth", "lastName": "Phelps", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Gunner", "lastName": "Sankey", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Helena", "lastName": "Schulze", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Evelyn", "lastName": "Shi", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Landon", "lastName": "Silva", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Josiah", "lastName": "Smith", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Ava", "lastName": "Villafana", "grade": 2, "teacher": "Peltonen", "room": 18},
-            {"firstName": "Aaryn", "lastName": "Arrington", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Azori", "lastName": "Blair", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Kaiden", "lastName": "Bowen", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Asher", "lastName": "Coats", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Presley", "lastName": "Eggleston", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Alexander", "lastName": "Fockler", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Kallie", "lastName": "Groves", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Athena", "lastName": "Jernigan", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Omar", "lastName": "Kulla", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Naomi", "lastName": "Mallory", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Connor", "lastName": "Murphy", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Juan", "lastName": "Perez", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Sovi", "lastName": "Reilly", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Warren", "lastName": "Rondeau Claggett", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Liam", "lastName": "Villafana", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Anaiyah", "lastName": "White", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Eli", "lastName": "White", "grade": 3, "teacher": "Perrigin", "room": 25},
-            {"firstName": "Alaia", "lastName": "Baughns", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Brandon", "lastName": "Bernal", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Analian", "lastName": "Brito", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Harper", "lastName": "Byrd", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Gabriella", "lastName": "Collins", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Tru", "lastName": "Fisher", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Jaxson", "lastName": "Guswiler", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Elijah", "lastName": "Harris", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Braden", "lastName": "Kringle", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Daniel", "lastName": "Mcneill", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Noah", "lastName": "Metz", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Jaxon", "lastName": "Moses", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Adriana", "lastName": "Moz-Ortega", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Levi", "lastName": "Perrigin", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Lucas", "lastName": "Ravizza", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Jaxon", "lastName": "Turner", "grade": 3, "teacher": "Ramsey", "room": 23},
-            {"firstName": "Zachary", "lastName": "Amoroso", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Aliyah", "lastName": "Batty", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Harrison", "lastName": "Claire", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Bryston", "lastName": "Clark", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "William", "lastName": "Colden", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Tristan", "lastName": "Colona", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Kassidy", "lastName": "D'Arcourt", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Brielle", "lastName": "Donohue", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Brielle", "lastName": "Hovemeyer", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Vayda", "lastName": "Locy", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Zian", "lastName": "Mcclinton", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Armani", "lastName": "Mccray", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Isla", "lastName": "Mcdowell", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Te'Ryah", "lastName": "Mitchell", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Cheryl", "lastName": "Montoya", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Lily", "lastName": "Sartin", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Ava-Lee", "lastName": "Sparrow", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Clifford", "lastName": "Sweet", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Michael", "lastName": "Tuschl", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Luca", "lastName": "Vargas", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Jordan", "lastName": "West Ii", "grade": 4, "teacher": "Rousselow", "room": 27},
-            {"firstName": "Bentley", "lastName": "Chamberlain", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Emmett", "lastName": "Crowder", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Kharli", "lastName": "Culp", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Benjamin", "lastName": "Cusic", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Autumn", "lastName": "Denston", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Edisyn", "lastName": "Engstrand-Irwin", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Savannah", "lastName": "Hicks", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Emanuel", "lastName": "Hinton", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Israel", "lastName": "Hyman", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Lyfe", "lastName": "Lee", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Eden", "lastName": "Mcneely", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Abigail", "lastName": "Montague", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Chloe", "lastName": "Ravizza", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Maverick", "lastName": "Smittle", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Trevor", "lastName": "Starnes", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Kristie", "lastName": "Thornhill", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "India", "lastName": "Walton", "grade": "KG", "teacher": "Russell", "room": 8},
-            {"firstName": "Jakayla", "lastName": "Cleveland", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Neveah", "lastName": "Eggleston", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Greyson", "lastName": "Godfrey", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Kartier", "lastName": "Goodson", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Cohen", "lastName": "Herb", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Syuli", "lastName": "Jordan", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Cleveland", "lastName": "Langi", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Ava", "lastName": "Phillips", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Zariyah", "lastName": "Ponce", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Kylan", "lastName": "Stevens", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Elithien", "lastName": "Taylor", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Ivory", "lastName": "Walen", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Willow", "lastName": "Williams", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Sadie", "lastName": "Windham", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Gianna", "lastName": "Ziara", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Rylin", "lastName": "Branham", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Danielle", "lastName": "Collins", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Parker", "lastName": "Colombrito", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Amaris", "lastName": "Cruz", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Mason", "lastName": "Cruz", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Ryder", "lastName": "Da Silva", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Luana", "lastName": "Diaz Santiago", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Alexander", "lastName": "Dill Iv", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Nora", "lastName": "Fawley", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Paisleigh", "lastName": "Hall", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Adriel", "lastName": "Kera", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Angelina", "lastName": "Majeski", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Addison", "lastName": "Montoya", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Fernanda", "lastName": "Roblero Medina", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Ronin--Louis", "lastName": "Santiago", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Makenna", "lastName": "Thomas", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Omar", "lastName": "Wilson Iii", "grade": "KG", "teacher": "Long", "room": 3},
-            {"firstName": "Emenna", "lastName": "Atkins", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Xiamara", "lastName": "Calhoun", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Morgan", "lastName": "Coleman", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Heidi", "lastName": "Freihofer", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Elijah", "lastName": "Garcia", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Emma", "lastName": "Gayarski", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Gabriel", "lastName": "Gimenez", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Derek", "lastName": "Hill", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Deonte'", "lastName": "Hyman", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Amir", "lastName": "Kassabi", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Scotlyn", "lastName": "Kelly", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Ferah", "lastName": "Keser", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Laylanni", "lastName": "Lee", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Jorge", "lastName": "Maldonado", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Lane", "lastName": "Mitchell", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Nikolai", "lastName": "Moss", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Gracelynn", "lastName": "Ramirez", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Christopher", "lastName": "Richardson", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Dymond", "lastName": "Ritter", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Skylar", "lastName": "Silcox", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Surraya", "lastName": "Tennant", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Zahara", "lastName": "Edwards", "grade": 4, "teacher": "Tyree-Herrmann", "room": 16},
-            {"firstName": "Jalani", "lastName": "Evelyn", "grade": 4, "teacher": "Tyree-Herrmann", "room": 16},
-            {"firstName": "Anita", "lastName": "Limon-Knighton", "grade": 4, "teacher": "Tyree-Herrmann", "room": 16},
-            {"firstName": "Nich", "lastName": "Obuga", "grade": 4, "teacher": "Tyree-Herrmann", "room": 16},
-            {"firstName": "Max", "lastName": "Peters", "grade": 5, "teacher": "Tyree-Herrmann", "room": 16},
-            {"firstName": "Sylas", "lastName": "Wheeler", "grade": 5, "teacher": "Tyree-Herrmann", "room": 16},
-            {"firstName": "Ezra", "lastName": "Bell Watson", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Joy", "lastName": "Dunsworth", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Jordan", "lastName": "Gonzalez", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Darius", "lastName": "Groome", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Elena", "lastName": "Mcneill", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Jaxon", "lastName": "Mosley", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Gareth", "lastName": "Passey", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Tyson", "lastName": "Smith", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Jackson", "lastName": "Sweeney", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Annmarie", "lastName": "Thornhill", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Brooklynn", "lastName": "Van Valkenburg", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Fiadh", "lastName": "Weisel", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Jerry", "lastName": "Aguilar", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Maddison", "lastName": "Coleman", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Tessa", "lastName": "Cruz", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Noel", "lastName": "Flowers", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Judah", "lastName": "Gannaban", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Devlin", "lastName": "Gomez", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Jydan Faith", "lastName": "Gomez", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Luella", "lastName": "Gomez", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Isabelle", "lastName": "Hesse", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Yasmeen", "lastName": "Kulla", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Lacey", "lastName": "Monahan", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Seamus", "lastName": "Morneault", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Emnet", "lastName": "Penn", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Ana", "lastName": "Perez", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Kameron", "lastName": "Pettyford", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Louis", "lastName": "Phan", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Reid", "lastName": "Robinson", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Jalon", "lastName": "Satterfield", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Myles", "lastName": "Topping", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Lucas", "lastName": "Turbi", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Cash", "lastName": "Underdue", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Kayson", "lastName": "Robinson-Baxter", "grade": "K", "teacher": "Sankey", "room": 4},
-            {"firstName": "Carmen", "lastName": "Allen", "grade": 2, "teacher": "", "room": null},
-            {"firstName": "Kreed", "lastName": "Baxter", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Callie", "lastName": "Brown", "grade": 3, "teacher": "", "room": null},
-            {"firstName": "Emberlyn", "lastName": "Carlisle", "grade": 2, "teacher": "Kramer", "room": 21},
-            {"firstName": "Kysean", "lastName": "Clarke", "grade": 2, "teacher": "Heckman", "room": 17},
-            {"firstName": "Ashlyn", "lastName": "Dejesus", "grade": 5, "teacher": "", "room": null},
-            {"firstName": "Julian", "lastName": "Dewitt", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Michael", "lastName": "Evans", "grade": 4, "teacher": "", "room": null},
-            {"firstName": "Emily", "lastName": "Freeman", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Yara", "lastName": "Gaviria", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Aamir", "lastName": "Happer", "grade": "PS", "teacher": "Burris", "room": "12A"},
-            {"firstName": "Joelle", "lastName": "Johnson", "grade": 2, "teacher": "Cohen", "room": 19},
-            {"firstName": "Isiah", "lastName": "King", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "James", "lastName": "Ludwig, Jr.", "grade": 5, "teacher": "Estep", "room": 30},
-            {"firstName": "Isla", "lastName": "Morneault", "grade": "PS", "teacher": "", "room": null},
-            {"firstName": "Slade", "lastName": "O'Connor", "grade": "KG", "teacher": "Sankey", "room": 4},
-            {"firstName": "Sofia", "lastName": "Perdomo Martinez", "grade": 1, "teacher": "Kelly", "room": 9},
-            {"firstName": "Caden", "lastName": "Scott Martinez", "grade": 5, "teacher": "St. Clair", "room": 31},
-            {"firstName": "Eden", "lastName": "Story", "grade": 4, "teacher": "Williams", "room": 28},
-            {"firstName": "Theodore", "lastName": "Thompson", "grade": 4, "teacher": "", "room": null},
-            {"firstName": "Emery", "lastName": "Wong", "grade": 1, "teacher": "Webb", "room": 7},
-            {"firstName": "Jody", "lastName": "Wright", "grade": 2, "teacher": "", "room": null},
-            {"firstName": "Adonis", "lastName": "Young", "grade": 1, "teacher": "Webb", "room": 7}
-        ];
+    {
+        "firstName": "Samuel",
+        "lastName": "Bullock",
+        "grade": "3",
+        "teacher": "Armstrong",
+        "room": 6
+    },
+    {
+        "firstName": "Samson",
+        "lastName": "Gannaban",
+        "grade": "3",
+        "teacher": "Armstrong",
+        "room": 6
+    },
+    {
+        "firstName": "August",
+        "lastName": "Pavlovich",
+        "grade": "1",
+        "teacher": "Armstrong",
+        "room": 6
+    },
+    {
+        "firstName": "Hendrick",
+        "lastName": "Rivas",
+        "grade": "3",
+        "teacher": "Armstrong",
+        "room": 6
+    },
+    {
+        "firstName": "Jace",
+        "lastName": "Roden",
+        "grade": "3",
+        "teacher": "Armstrong",
+        "room": 6
+    },
+    {
+        "firstName": "Jacob",
+        "lastName": "Tjon Eng Soe",
+        "grade": "2",
+        "teacher": "Armstrong",
+        "room": 6
+    },
+    {
+        "firstName": "Christian",
+        "lastName": "Whitworth",
+        "grade": "2",
+        "teacher": "Armstrong",
+        "room": 6
+    },
+    {
+        "firstName": "Olivia",
+        "lastName": "Ballou",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Sofia",
+        "lastName": "Cali",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Arya",
+        "lastName": "Carter",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Selena",
+        "lastName": "De Vera Bay",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Lynnorah",
+        "lastName": "Engstrand-Irwin",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Divonlee Etsin",
+        "lastName": "Etse",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Elijah",
+        "lastName": "Faison Jr.",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Zorial",
+        "lastName": "Felton",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Melanie",
+        "lastName": "Gonzales",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Sioeli",
+        "lastName": "Langi",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Ian",
+        "lastName": "Larkin",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Maryjane",
+        "lastName": "Larkin",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Ibraheem",
+        "lastName": "Manzoor",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Bailey",
+        "lastName": "Monahan",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Jalen",
+        "lastName": "Nickles",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Kathleen",
+        "lastName": "Oettel",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Emma",
+        "lastName": "Owens",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Mason",
+        "lastName": "Renn",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Brady",
+        "lastName": "Roundtree",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Kameron",
+        "lastName": "Stanley",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Liam",
+        "lastName": "Wilson",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Grayson",
+        "lastName": "Zeiders",
+        "grade": "4",
+        "teacher": "Baker",
+        "room": 26
+    },
+    {
+        "firstName": "Raiden",
+        "lastName": "Campbell",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10P"
+    },
+    {
+        "firstName": "Jasmine",
+        "lastName": "Dixon",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10A"
+    },
+    {
+        "firstName": "Sebastian",
+        "lastName": "Dunbar",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10A"
+    },
+    {
+        "firstName": "Josue",
+        "lastName": "Loredo-Villanueva",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10P"
+    },
+    {
+        "firstName": "Landreth",
+        "lastName": "Oliveira",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10A"
+    },
+    {
+        "firstName": "Mateo",
+        "lastName": "Quillas Gonzalez",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10A"
+    },
+    {
+        "firstName": "Isaiah",
+        "lastName": "Schoenborn",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10A"
+    },
+    {
+        "firstName": "Beckham",
+        "lastName": "Stallard",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10P"
+    },
+    {
+        "firstName": "Ai'Lani",
+        "lastName": "Tauti",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10A"
+    },
+    {
+        "firstName": "Thomas",
+        "lastName": "Wood",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10A"
+    },
+    {
+        "firstName": "Aniko",
+        "lastName": "Young-Tillery",
+        "grade": "PS",
+        "teacher": "Bruffy",
+        "room": "10P"
+    },
+    {
+        "firstName": "Leo",
+        "lastName": "Castillo Boehme",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Chance",
+        "lastName": "Ganiyu",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Aamir",
+        "lastName": "Happer",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Kindle",
+        "lastName": "Jackson",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Aries",
+        "lastName": "Jones",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Braxton",
+        "lastName": "Long",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Vera",
+        "lastName": "Powell",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Aliana",
+        "lastName": "Sibal",
+        "grade": "PS",
+        "teacher": "Burris",
+        "room": "12A"
+    },
+    {
+        "firstName": "Caden",
+        "lastName": "Barnes",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Cali",
+        "lastName": "Batty",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Eisley",
+        "lastName": "Copeland",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Julian",
+        "lastName": "Dewitt",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Harper",
+        "lastName": "Fawley",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Reagan",
+        "lastName": "Freihofer",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Yara",
+        "lastName": "Gaviria",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Harper",
+        "lastName": "Howard",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Joelle",
+        "lastName": "Johnson",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Slater",
+        "lastName": "Kelly",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Makenna",
+        "lastName": "Malone",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Wyatt",
+        "lastName": "Mann",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Joanna",
+        "lastName": "Munro",
+        "grade": "2",
+        "teacher": "Cohen",
+        "room": 19
+    },
+    {
+        "firstName": "Messiah",
+        "lastName": "Baxter",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Greyson",
+        "lastName": "Crowder",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Dillon",
+        "lastName": "Domanski",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Asher",
+        "lastName": "Hall",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Amelia",
+        "lastName": "Hermann",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Amelia",
+        "lastName": "Kwok",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Lula",
+        "lastName": "Leger",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Odin",
+        "lastName": "Lyons",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Ryu",
+        "lastName": "Martinez",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Bayleigh",
+        "lastName": "Perdue",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Andrew",
+        "lastName": "Roy",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Leander",
+        "lastName": "Walen",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Jayden",
+        "lastName": "Willis",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Sylvia",
+        "lastName": "Wright",
+        "grade": "3",
+        "teacher": "Colombrito",
+        "room": 20
+    },
+    {
+        "firstName": "Milo",
+        "lastName": "Below",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Aniston",
+        "lastName": "Colombrito",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Kingston",
+        "lastName": "Culp",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Natalia",
+        "lastName": "Franco",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Lucas",
+        "lastName": "Guidry",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Julianna",
+        "lastName": "Guswiler",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Jaxon",
+        "lastName": "Hill",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Allen",
+        "lastName": "Key",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Lauren",
+        "lastName": "Lin",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "John",
+        "lastName": "Mcdowell",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Anias",
+        "lastName": "Miller-Brinson",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Tommie",
+        "lastName": "Murphy",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Ada",
+        "lastName": "Reilly",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Chandler",
+        "lastName": "St. Clair",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Dean",
+        "lastName": "Tran",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Rylee",
+        "lastName": "Wommack",
+        "grade": "1",
+        "teacher": "Crawford",
+        "room": 5
+    },
+    {
+        "firstName": "Beau",
+        "lastName": "Burris",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Lorenzo",
+        "lastName": "De Vera Bay",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Alina",
+        "lastName": "Engstrand",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Carter",
+        "lastName": "Fields",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Ares",
+        "lastName": "Flowers",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Nora",
+        "lastName": "Gray",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Catalina",
+        "lastName": "Guiles",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Travis",
+        "lastName": "Hamlin",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "David",
+        "lastName": "Hesse",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Leidon",
+        "lastName": "Lee",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Connor",
+        "lastName": "Logan",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Ivy",
+        "lastName": "Nguyen",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Karley",
+        "lastName": "Shacklette",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Danilo",
+        "lastName": "Vargas",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Murphy",
+        "lastName": "Waldin",
+        "grade": "3",
+        "teacher": "Driscoll",
+        "room": 24
+    },
+    {
+        "firstName": "Sophia",
+        "lastName": "Aoki",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Noah",
+        "lastName": "Collins",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Leona",
+        "lastName": "Douglas-Patterson",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Ellie",
+        "lastName": "Ebersole",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Antonio",
+        "lastName": "Escalante",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Emily",
+        "lastName": "Freeman",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Taylor",
+        "lastName": "Freeman Gatlin",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "A'Hriyon",
+        "lastName": "Hall",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Lillian",
+        "lastName": "Hastings",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Jaythan",
+        "lastName": "Jimenez Gonzalez",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Beckett",
+        "lastName": "Lessard",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "James",
+        "lastName": "Ludwig, Jr.",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Olivia",
+        "lastName": "Moses",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Scarlet",
+        "lastName": "Murphy",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Lucas",
+        "lastName": "Previtire",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Alexander",
+        "lastName": "Schaus",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Margaret",
+        "lastName": "Schulze",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Jaxon Xavier",
+        "lastName": "Stewart",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Isaiah",
+        "lastName": "White Turner",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Emmalina",
+        "lastName": "Womack",
+        "grade": "5",
+        "teacher": "Estep",
+        "room": 30
+    },
+    {
+        "firstName": "Gael",
+        "lastName": "Allen",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Ali-Rasheed",
+        "lastName": "Baughns, Jr.",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Luke",
+        "lastName": "Bernal",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Brooklyn",
+        "lastName": "Collins",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Kallahan",
+        "lastName": "Da Silva",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Queen",
+        "lastName": "Davis",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Selena",
+        "lastName": "Dhalai",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Tavi",
+        "lastName": "Eaton",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Bradley",
+        "lastName": "Escalante Roblero",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Hannah",
+        "lastName": "Gray",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Delaney",
+        "lastName": "Larkin",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Garrett",
+        "lastName": "Lessard",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Lauryn",
+        "lastName": "Norfleet",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Ryder",
+        "lastName": "Sweeney",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Eli",
+        "lastName": "Whitworth",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "Amara",
+        "lastName": "Williams",
+        "grade": "PK",
+        "teacher": "Geller",
+        "room": 1
+    },
+    {
+        "firstName": "London",
+        "lastName": "Daniels",
+        "grade": "2",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Raymond",
+        "lastName": "D'Arcourt",
+        "grade": "3",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Novah",
+        "lastName": "Jones",
+        "grade": "2",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Cylus",
+        "lastName": "Litzelman",
+        "grade": "3",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Mason",
+        "lastName": "Malloy",
+        "grade": "3",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Je'Von",
+        "lastName": "Mathiasen",
+        "grade": "KG",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Cadence",
+        "lastName": "Mcneely",
+        "grade": "3",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Payton",
+        "lastName": "Terry",
+        "grade": "3",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Quinn",
+        "lastName": "Van Valkenburg",
+        "grade": "2",
+        "teacher": "Grembowitz",
+        "room": 13
+    },
+    {
+        "firstName": "Alekzander",
+        "lastName": "Aguirre",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Kysean",
+        "lastName": "Clarke",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Jackson",
+        "lastName": "Comeau",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Forrest",
+        "lastName": "Engstrand-Irwin",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Santiago",
+        "lastName": "Felix",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Olivia",
+        "lastName": "Heil",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Delaney",
+        "lastName": "Kleeh",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Jaxon",
+        "lastName": "Lett",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Britton",
+        "lastName": "Malone",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Teeda",
+        "lastName": "Nonthaveth",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Kate",
+        "lastName": "Phan",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Fabian",
+        "lastName": "Rodriguez Aguilar",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Nolan",
+        "lastName": "Shacklette",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Sofia",
+        "lastName": "Silva",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Otto",
+        "lastName": "Stanley",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Lorelei",
+        "lastName": "Young",
+        "grade": "2",
+        "teacher": "Heckman",
+        "room": 17
+    },
+    {
+        "firstName": "Leo",
+        "lastName": "Bernal",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Adeline",
+        "lastName": "Burford",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Mohamed",
+        "lastName": "Dhalai",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Estella",
+        "lastName": "Duffy",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Willow",
+        "lastName": "Etheridge",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Alonzo",
+        "lastName": "Grant",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Avery",
+        "lastName": "Heil",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Cayman",
+        "lastName": "Key",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Sarai",
+        "lastName": "Mingo",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Kyree",
+        "lastName": "Newsome",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Alanna",
+        "lastName": "Piga-Hamlin",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Jerriah",
+        "lastName": "Satterfield",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Ezra",
+        "lastName": "Smith",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Emilia",
+        "lastName": "Tran",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Bryson",
+        "lastName": "Williams",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Zain",
+        "lastName": "Ziara",
+        "grade": "PK",
+        "teacher": "Hodges",
+        "room": 2
+    },
+    {
+        "firstName": "Isaiah",
+        "lastName": "Coats",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Shyanne",
+        "lastName": "Davis",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Quentin",
+        "lastName": "De Vera Bay",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Miles",
+        "lastName": "Dunsworth",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Landon",
+        "lastName": "Fort",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Colton",
+        "lastName": "Glende",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Nelly",
+        "lastName": "Gonzalez",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "James",
+        "lastName": "Greene",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Macie",
+        "lastName": "Groves",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Hatch",
+        "lastName": "Harding",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Dakota",
+        "lastName": "Harver",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Brooklynn",
+        "lastName": "Hovemeyer",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Zoebelle",
+        "lastName": "Ilao",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Jameson",
+        "lastName": "Jones",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Victoria",
+        "lastName": "Kerzner",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Florence",
+        "lastName": "Lian",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Nelson",
+        "lastName": "Lyons",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Siwa",
+        "lastName": "Messan",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Christopher",
+        "lastName": "Penn",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Adam Damien",
+        "lastName": "Peredo",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Avery",
+        "lastName": "Smith",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Ryan",
+        "lastName": "Sola",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "William",
+        "lastName": "Starnes",
+        "grade": "5",
+        "teacher": "Huggins",
+        "room": 29
+    },
+    {
+        "firstName": "Aalayah",
+        "lastName": "Arrington",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Luca",
+        "lastName": "Atkins",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Kreed",
+        "lastName": "Baxter",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Colton",
+        "lastName": "Duke",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Arue Leialoha",
+        "lastName": "Etse",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Carly",
+        "lastName": "Klepacz",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Bodhi",
+        "lastName": "Knowles",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Sofia",
+        "lastName": "Perdomo Martinez",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Bryson",
+        "lastName": "Piga-Hamlin",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Emily",
+        "lastName": "Schaus",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Micah",
+        "lastName": "Schmeding",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Aubrey",
+        "lastName": "Silva",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Cohen",
+        "lastName": "Smith",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Joycelynn",
+        "lastName": "Tuschl",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "Paul",
+        "lastName": "You",
+        "grade": "1",
+        "teacher": "Kelly",
+        "room": 9
+    },
+    {
+        "firstName": "June",
+        "lastName": "Adams",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Emberlyn",
+        "lastName": "Carlisle",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Mckenzie",
+        "lastName": "Coleman",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Adrian",
+        "lastName": "Demer",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Lilah",
+        "lastName": "Fields",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Pierre",
+        "lastName": "Hyman",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Ava",
+        "lastName": "Metz",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Kayla",
+        "lastName": "Pinkney",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Gracelynn",
+        "lastName": "Roberts",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Andrea",
+        "lastName": "Rondeau Claggett",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Javien",
+        "lastName": "Thompson",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Luciano",
+        "lastName": "Wilkin",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Dean",
+        "lastName": "Windham",
+        "grade": "2",
+        "teacher": "Kramer",
+        "room": 21
+    },
+    {
+        "firstName": "Gabriella",
+        "lastName": "Arestozo",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Paige",
+        "lastName": "Bailey",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Christopher",
+        "lastName": "Bates",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "William",
+        "lastName": "Bruffy",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Brooklyn",
+        "lastName": "Davis",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Lincoln",
+        "lastName": "Hermann",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Darren",
+        "lastName": "Lin",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Gerardo",
+        "lastName": "Loredo-Villanueva",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Henson",
+        "lastName": "Miller",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Amaya",
+        "lastName": "Miller-Brinson",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Elaine",
+        "lastName": "Nguyen",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Gracelyn",
+        "lastName": "Sacksteder",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Ryleigh",
+        "lastName": "Steen",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Kaladin",
+        "lastName": "Taylor",
+        "grade": "1",
+        "teacher": "Lett",
+        "room": 11
+    },
+    {
+        "firstName": "Grayson",
+        "lastName": "Barth",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Charleigh",
+        "lastName": "Dildy",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Izaiah",
+        "lastName": "Everett",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Kaelyx",
+        "lastName": "Kitchen",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Karson",
+        "lastName": "Maggard",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Carter",
+        "lastName": "Mckeeby",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Ocean",
+        "lastName": "Ramos",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Matthew",
+        "lastName": "Walker",
+        "grade": "PS",
+        "teacher": "Nickles",
+        "room": "12P"
+    },
+    {
+        "firstName": "Roman",
+        "lastName": "Barnett",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Jaxon",
+        "lastName": "Conner",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Angel",
+        "lastName": "Freeman",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Iris",
+        "lastName": "Grace",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Mariam",
+        "lastName": "Kaba",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "John",
+        "lastName": "Perrigin",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Kenneth",
+        "lastName": "Phelps",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Gunner",
+        "lastName": "Sankey",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Helena",
+        "lastName": "Schulze",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Evelyn",
+        "lastName": "Shi",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Landon",
+        "lastName": "Silva",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Josiah",
+        "lastName": "Smith",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Ava",
+        "lastName": "Villafana",
+        "grade": "2",
+        "teacher": "Peltonen",
+        "room": 18
+    },
+    {
+        "firstName": "Aaryn",
+        "lastName": "Arrington",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Azori",
+        "lastName": "Blair",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Kaiden",
+        "lastName": "Bowen",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Asher",
+        "lastName": "Coats",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Presley",
+        "lastName": "Eggleston",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Alexander",
+        "lastName": "Fockler",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Kallie",
+        "lastName": "Groves",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Athena",
+        "lastName": "Jernigan",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Omar",
+        "lastName": "Kulla",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Naomi",
+        "lastName": "Mallory",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Jaxon",
+        "lastName": "Moses",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Connor",
+        "lastName": "Murphy",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Juan",
+        "lastName": "Perez",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Sovi",
+        "lastName": "Reilly",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Warren",
+        "lastName": "Rondeau Claggett",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Liam",
+        "lastName": "Villafana",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Anaiyah",
+        "lastName": "White",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Eli",
+        "lastName": "White",
+        "grade": "3",
+        "teacher": "Perrigin",
+        "room": 25
+    },
+    {
+        "firstName": "Alaia",
+        "lastName": "Baughns",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Brandon",
+        "lastName": "Bernal",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Analian",
+        "lastName": "Brito",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Harper",
+        "lastName": "Byrd",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Gabriella",
+        "lastName": "Collins",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Tru",
+        "lastName": "Fisher",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Jaxson",
+        "lastName": "Guswiler",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Elijah",
+        "lastName": "Harris",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Braden",
+        "lastName": "Kringle",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Daniel",
+        "lastName": "Mcneill",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Noah",
+        "lastName": "Metz",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Adriana",
+        "lastName": "Moz-Ortega",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Levi",
+        "lastName": "Perrigin",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Lucas",
+        "lastName": "Ravizza",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Jaxon",
+        "lastName": "Turner",
+        "grade": "3",
+        "teacher": "Ramsey",
+        "room": 23
+    },
+    {
+        "firstName": "Zachary",
+        "lastName": "Amoroso",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Aliyah",
+        "lastName": "Batty",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Harrison",
+        "lastName": "Claire",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Bryston",
+        "lastName": "Clark",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Tristan",
+        "lastName": "Colona",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Kassidy",
+        "lastName": "D'Arcourt",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Brielle",
+        "lastName": "Donohue",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Brielle",
+        "lastName": "Hovemeyer",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Vayda",
+        "lastName": "Locy",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Zian",
+        "lastName": "Mcclinton",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Armani",
+        "lastName": "Mccray",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Isla",
+        "lastName": "Mcdowell",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Jonah",
+        "lastName": "Mcintyre",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Te'Ryah",
+        "lastName": "Mitchell",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Cheryl",
+        "lastName": "Montoya",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Lily",
+        "lastName": "Sartin",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Aiden",
+        "lastName": "Smith",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Ava-Lee",
+        "lastName": "Sparrow",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Clifford",
+        "lastName": "Sweet",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Michael",
+        "lastName": "Tuschl",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Luca",
+        "lastName": "Vargas",
+        "grade": "4",
+        "teacher": "Rousselow",
+        "room": 27
+    },
+    {
+        "firstName": "Bentley",
+        "lastName": "Chamberlain",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Emmett",
+        "lastName": "Crowder",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Kharli",
+        "lastName": "Culp",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Benjamin",
+        "lastName": "Cusic",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Autumn",
+        "lastName": "Denston",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Edisyn",
+        "lastName": "Engstrand-Irwin",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Savannah",
+        "lastName": "Hicks",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Emanuel",
+        "lastName": "Hinton",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Israel",
+        "lastName": "Hyman",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Marley",
+        "lastName": "Kenny",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Lyfe",
+        "lastName": "Lee",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Eden",
+        "lastName": "Mcneely",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Abigail",
+        "lastName": "Montague",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Chloe",
+        "lastName": "Ravizza",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Maverick",
+        "lastName": "Smittle",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Trevor",
+        "lastName": "Starnes",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Kristie",
+        "lastName": "Thornhill",
+        "grade": "KG",
+        "teacher": "Russell",
+        "room": 8
+    },
+    {
+        "firstName": "Jakayla",
+        "lastName": "Cleveland",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Neveah",
+        "lastName": "Eggleston",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Greyson",
+        "lastName": "Godfrey",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Kartier",
+        "lastName": "Goodson",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Cohen",
+        "lastName": "Herb",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Cleveland",
+        "lastName": "Langi",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Slade",
+        "lastName": "O'Connor",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Ava",
+        "lastName": "Phillips",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Zariyah",
+        "lastName": "Ponce",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Leon",
+        "lastName": "Poole",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Kayson",
+        "lastName": "Robinson-Baxter",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Kylan",
+        "lastName": "Stevens",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Elithien",
+        "lastName": "Taylor",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Ivory",
+        "lastName": "Walen",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Willow",
+        "lastName": "Williams",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Sadie",
+        "lastName": "Windham",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Gianna",
+        "lastName": "Ziara",
+        "grade": "KG",
+        "teacher": "Sankey",
+        "room": 4
+    },
+    {
+        "firstName": "Rylin",
+        "lastName": "Branham",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Danielle",
+        "lastName": "Collins",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Parker",
+        "lastName": "Colombrito",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Amaris",
+        "lastName": "Cruz",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Mason",
+        "lastName": "Cruz",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Ryder",
+        "lastName": "Da Silva",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Alexander",
+        "lastName": "Dill Iv",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Christina",
+        "lastName": "Dong",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Nora",
+        "lastName": "Fawley",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Paisleigh",
+        "lastName": "Hall",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Adriel",
+        "lastName": "Kera",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Angelina",
+        "lastName": "Majeski",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Reya",
+        "lastName": "Martinez",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Addison",
+        "lastName": "Montoya",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Fernanda",
+        "lastName": "Roblero Medina",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Ronin--Louis",
+        "lastName": "Santiago",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Makenna",
+        "lastName": "Thomas",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Omar",
+        "lastName": "Wilson Iii",
+        "grade": "KG",
+        "teacher": "Schubart",
+        "room": 3
+    },
+    {
+        "firstName": "Elizabeth",
+        "lastName": "Estrada-Machado",
+        "grade": "PS",
+        "teacher": "Sprouse",
+        "room": "PS"
+    },
+    {
+        "firstName": "Isla",
+        "lastName": "Morneault",
+        "grade": "PS",
+        "teacher": "Sprouse",
+        "room": "PS"
+    },
+    {
+        "firstName": "Quentin",
+        "lastName": "Todd",
+        "grade": "PS",
+        "teacher": "Sprouse",
+        "room": "PS"
+    },
+    {
+        "firstName": "Emenna",
+        "lastName": "Atkins",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Xiamara",
+        "lastName": "Calhoun",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Morgan",
+        "lastName": "Coleman",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Heidi",
+        "lastName": "Freihofer",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Elijah",
+        "lastName": "Garcia",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Emma",
+        "lastName": "Gayarski",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Gabriel",
+        "lastName": "Gimenez",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Derek",
+        "lastName": "Hill",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Deonte'",
+        "lastName": "Hyman",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Scotlyn",
+        "lastName": "Kelly",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Ferah",
+        "lastName": "Keser",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Isiah",
+        "lastName": "King",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Laylanni",
+        "lastName": "Lee",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Jorge",
+        "lastName": "Maldonado",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Lane",
+        "lastName": "Mitchell",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Nikolai",
+        "lastName": "Moss",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Gracelynn",
+        "lastName": "Ramirez",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Christopher",
+        "lastName": "Richardson",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Dymond",
+        "lastName": "Ritter",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Caden",
+        "lastName": "Scott Martinez",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Skylar",
+        "lastName": "Silcox",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Surraya",
+        "lastName": "Tennant",
+        "grade": "5",
+        "teacher": "St. Clair",
+        "room": 31
+    },
+    {
+        "firstName": "Zahara",
+        "lastName": "Edwards",
+        "grade": "4",
+        "teacher": "Tyree-Herrmann",
+        "room": 16
+    },
+    {
+        "firstName": "Jalani",
+        "lastName": "Evelyn",
+        "grade": "4",
+        "teacher": "Tyree-Herrmann",
+        "room": 16
+    },
+    {
+        "firstName": "Anita",
+        "lastName": "Limon-Knighton",
+        "grade": "4",
+        "teacher": "Tyree-Herrmann",
+        "room": 16
+    },
+    {
+        "firstName": "Nich",
+        "lastName": "Obuga",
+        "grade": "4",
+        "teacher": "Tyree-Herrmann",
+        "room": 16
+    },
+    {
+        "firstName": "Max",
+        "lastName": "Peters",
+        "grade": "5",
+        "teacher": "Tyree-Herrmann",
+        "room": 16
+    },
+    {
+        "firstName": "Theodore",
+        "lastName": "Thompson",
+        "grade": "4",
+        "teacher": "Tyree-Herrmann",
+        "room": 16
+    },
+    {
+        "firstName": "Sylas",
+        "lastName": "Wheeler",
+        "grade": "5",
+        "teacher": "Tyree-Herrmann",
+        "room": 16
+    },
+    {
+        "firstName": "Ezra",
+        "lastName": "Bell Watson",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Zhuri",
+        "lastName": "Davis",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Joy",
+        "lastName": "Dunsworth",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Jordan",
+        "lastName": "Gonzalez",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Darius",
+        "lastName": "Groome",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Elena",
+        "lastName": "Mcneill",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Jaxon",
+        "lastName": "Mosley",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Brantley",
+        "lastName": "Otto",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Gareth",
+        "lastName": "Passey",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Tyson",
+        "lastName": "Smith",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Jackson",
+        "lastName": "Sweeney",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Annmarie",
+        "lastName": "Thornhill",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Brooklynn",
+        "lastName": "Van Valkenburg",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Fiadh",
+        "lastName": "Weisel",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Emery",
+        "lastName": "Wong",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Adonis",
+        "lastName": "Young",
+        "grade": "1",
+        "teacher": "Webb",
+        "room": 7
+    },
+    {
+        "firstName": "Jerry",
+        "lastName": "Aguilar",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Maddison",
+        "lastName": "Coleman",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Tessa",
+        "lastName": "Cruz",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Noel",
+        "lastName": "Flowers",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Judah",
+        "lastName": "Gannaban",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Devlin",
+        "lastName": "Gomez",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Jydan Faith",
+        "lastName": "Gomez",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Luella",
+        "lastName": "Gomez",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Isabelle",
+        "lastName": "Hesse",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Yasmeen",
+        "lastName": "Kulla",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Lacey",
+        "lastName": "Monahan",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Seamus",
+        "lastName": "Morneault",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Emnet",
+        "lastName": "Penn",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Ana",
+        "lastName": "Perez",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Kameron",
+        "lastName": "Pettyford",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Louis",
+        "lastName": "Phan",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Reid",
+        "lastName": "Robinson",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Jalon",
+        "lastName": "Satterfield",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Eden",
+        "lastName": "Story",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Myles",
+        "lastName": "Topping",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Lucas",
+        "lastName": "Turbi",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    },
+    {
+        "firstName": "Cash",
+        "lastName": "Underdue",
+        "grade": "4",
+        "teacher": "Williams",
+        "room": 28
+    }
+];
         let currentActionType = ''; // 'Check In Late', 'Pick Up Early', or 'Pick Up Late, after 2:50 PM'
         let isStudentSelected = false;
 
